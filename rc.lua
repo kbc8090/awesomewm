@@ -751,7 +751,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 --
 --
 gears.timer {
-        timeout   = 600,
+        timeout   = 598,
         call_now  = true,
         autostart = true,
         callback  = function()
