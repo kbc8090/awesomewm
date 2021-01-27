@@ -755,7 +755,7 @@ gears.timer {
         call_now  = true,
         autostart = true,
         callback  = function()
-		  naughty.notify({title = "Retrieving Updates", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
+--		  naughty.notify({title = "Retrieving Updates", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
 		  awful.spawn.easy_async_with_shell("checkupdates > $HOME/.config/awesome/scripts/checktemp", function(stdout) end)
 end
 }

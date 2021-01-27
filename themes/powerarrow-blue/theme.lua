@@ -6,6 +6,7 @@
 --]]
 
 local gears = require("gears")
+shape = require("gears.shape")
 local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
@@ -16,29 +17,36 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 --theme.wallpaper                                 = theme.dir .. "/starwars.jpg"
-theme.font                                      = "Ubuntu Bold 12"
-theme.taglist_font                              = "Ubuntu Mono Bold 14"
-theme.tasklist_font										= "Ubuntu Mono Bold 13"
-theme.fg_normal                                 = "#ffffff"
+theme.font                                      = "Cascadia Code Bold 11"
+theme.taglist_font                              = "Cascadia Code Bold 12"
+theme.tasklist_font										= "Cascadia Code Bold 11"
+theme.fg_normal                                 = "#1b1e2b"
 theme.fg_focus                                  = "#35539c"
 theme.fg_urgent                                 = "#ffb26b"
-theme.bg_normal                                 = "#282a36"
+theme.bg_normal                                 = "#1b1e2b"
 theme.bg_focus                                  = "#5898ED"
 theme.bg_urgent                                 = "#3F3F3F"
 theme.icon_theme											= "Papirus"
-theme.taglist_fg_focus                          = "#282a36"
-theme.taglist_fg_occupied								= "#5898ed"
-theme.taglist_bg_occupied								= "#404554"
-theme.tasklist_bg_focus                         = "#282a36"
-theme.tasklist_fg_focus                         = "#5898ED"
+theme.taglist_fg_focus                          = "#1b1e2b"
+theme.taglist_bg_focus                          = "#548bff"
+theme.taglist_bg_empty									= "#1b1e2b"
+theme.taglist_fg_empty									= "#a8b4ff"
+theme.taglist_fg_occupied								= "#548bff"
+theme.taglist_bg_occupied								= "#404661"
+theme.tasklist_bg_focus                         = "#1b1e2b"
+theme.tasklist_fg_focus                         = "#ffb26b"
 theme.border_width                              = 2
-theme.border_normal                             = "#4c566a"
-theme.border_focus                              = "#0f9fff"
+theme.border_normal                             = "#1b1e2b"
+theme.border_focus                              = "#ffb26b"
 theme.border_marked                             = "#CC9393"
 theme.menu_height                               = 27
 theme.menu_width                                = 230
-theme.menu_font                                 = "Ubuntu Medium 11"
+theme.menu_font                                 = "Cantarell Bold 11"
+theme.menu_fg_focus										= "#1b1e2b"
+theme.menu_fg_normal										= "#a8b4ff"
+theme.menu_bg_focus										= "#548bff"
 theme.notification_font									= "Ubuntu Mono Medium 12"
+theme.notification_fg									= "#a8b4ff"
 --theme.notification_timeout			= 8
 theme.systray_icon_spacing                      = 2
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
@@ -78,12 +86,28 @@ theme.useless_gap                               = 3
 local markup = lain.util.markup
 local separators = lain.util.separators
 
+myawesomemenu = {
+   { 'hotkeys', function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+   { 'manual', 'xterm' .. ' -e man awesome' },
+   { 'restart', awesome.restart },
+   { 'quit', function() awesome.quit() end }
+}
+
+mymainmenu = awful.menu({ items = { { 'awesome', myawesomemenu, theme.awesome_icon },
+                                    { 'open terminal', 'xterm'}
+                                  }
+                        })
+
+mylauncher = awful.widget.launcher({ image = theme.awesome_icon,
+                                     menu = mymainmenu })
+
+
 -- Textclock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     "date +'%a, %b %d %I:%M %p'", 60,
     function(widget, stdout)
-        widget:set_markup(" 🗓️ " .. markup.font(theme.font, stdout))
+        widget:set_markup("  " .. markup.font(theme.font, stdout))
     end
 )
 
@@ -104,7 +128,7 @@ theme.volume = lain.widget.pulsebar({
 })
 
 -- MEM
-local memicon = wibox.widget.imagebox(theme.widget_mem)
+local memicon = wibox.widget.textbox(" ")
 local mem = lain.widget.mem({
     settings = function()
         widget:set_markup(markup.font(theme.font, " " .. mem_now.used .. "MB "))
@@ -118,30 +142,31 @@ https://openweathermap.org/
 Type in the name of your city
 Copy/paste the city code in the URL to this file in city_id
 --]]
-local weathericon = wibox.widget.imagebox(theme.widget_weather)
+--local weathericon = wibox.widget.imagebox(theme.widget_weather)
+local weathericon = wibox.widget.textbox("  ")
 theme.weather = lain.widget.weather({
     city_id = 4145719, -- placeholder (Belgium)
     notification_preset = { font = "Ubuntu Mono Medium 11", fg = theme.fg_normal },
-    weather_na_markup = markup.fontfg(theme.font, "#ffffff", "N/A "),
+    weather_na_markup = markup.fontfg(theme.font, "#1b1e2b", "N/A "),
     settings = function()
         descr = weather_now["weather"][1]["description"]:lower()
         units = math.floor(weather_now["main"]["temp"])
-        widget:set_markup(markup.fontfg(theme.font, "#ffffff", descr .. " @ " .. units .. "°F "))
+        widget:set_markup(markup.fontfg(theme.font, "#1b1e2b", descr .. " @ " .. units .. "°F "))
     end
 })
 
 -- ALSA volume
-local volicon = wibox.widget.imagebox(theme.widget_vol)
+local volicon = wibox.widget.textbox("   ")
 theme.volume = lain.widget.alsa({
     settings = function()
         if volume_now.status == "off" then
-            volicon:set_image(theme.widget_vol_mute)
+            volicon:set_text(" ")
         elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(theme.widget_vol_no)
+            volicon:set_text(" ")
         elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_image(theme.widget_vol_low)
+            volicon:set_text(" ")
         else
-            volicon:set_image(theme.widget_vol)
+            volicon:set_text(" ")
         end
 
         widget:set_markup(markup.font(theme.font, " " .. volume_now.level .. "% "))
@@ -152,17 +177,18 @@ theme.volume = lain.widget.alsa({
 --local checkupd = awful.widget.watch('fish -c "checkupdates | wc -l"', 1200) 
 --local checkupd = awful.widget.watch('bash -c "set -o pipefail; checkupdates | wc -l"', 1200)
 --awful.spawn.easy_async_with_shell("checkupdates | wc -l", function(stdout)
---local kernel = awful.widget.watch('bash -c "uname -r"', 3600)
+local kernelicon = wibox.widget.textbox("  ")
+local kernel = awful.widget.watch('bash -c "uname -r"', 36000)
 local checkupd = awful.widget.watch('bash -c "sleep 5 && cat $HOME/.config/awesome/scripts/checktemp | wc -l"', 620, function(widget, stdout, stderr, exit) 
-    widget:set_markup(markup.fontfg(theme.font, "#ffffff", stdout .. " " .. stderr))
+    widget:set_markup(markup.fontfg(theme.font, "#1b1e2b", stdout .. " " .. stderr))
 end)
-local updicon = wibox.widget.textbox()
+local updicon = wibox.widget.textbox("  ")
 local updiconblank = wibox.widget.textbox()
-updicon.text = " Updates: "
 updiconblank.text = " "
 
 -- Separators
 local arrow = separators.arrow_left
+local arrowright = separators.arrow_right
 
 function theme.powerline_rl(cr, width, height)
     local arrow_depth, offset = height/2, 0
@@ -212,11 +238,11 @@ function theme.at_screen_connect(s)
     s.mytasklist = awful.widget.tasklist {
 	    screen = s,
 	    filter = awful.widget.tasklist.filter.focused
-	    -- buttons = awful.util.tasklist_buttons
+	    --buttons = awful.util.tasklist_buttons
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 22, bg = theme.bg_normal, fg = theme.fg_normal, border_width = 1, border_color = "#000000" })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = 22, align = center_vertical, bg = theme.bg_normal, fg = theme.fg_normal, border_width = 1, border_color = "#000000" })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -224,6 +250,7 @@ function theme.at_screen_connect(s)
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             --spr,
+				--mylauncher,
             s.mytaglist,
             --spr,
         },
@@ -247,17 +274,19 @@ function theme.at_screen_connect(s)
            -- wibox.container.background(wibox.container.margin(wibox.widget { mailicon, mail and mail.widget, layout = wibox.layout.align.horizontal }, 4, 7), "#343434"),
            
 
-	    arrow("alpha", "#5898ED"),
-            wibox.container.background(wibox.container.margin(wibox.widget { updicon, checkupd, updiconblank, layout = wibox.layout.align.horizontal }, 2, 3), "#5898ED"),
-            arrow("#5898ED", "#35539c"),
-            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#35539c"),
-            arrow("#35539c", "#5898ED"),
-            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#5898ED"),
-            arrow("#5898ED", "#35539c"),
-            wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#35539c"),
-            arrow("#35539c", "#5898ED"),
-            wibox.container.background(wibox.container.margin(clock, 4, 8), "#5898ED"),
-            arrow("#5898ED", "alpha"),
+	    arrow("alpha", "#f07178"),
+            wibox.container.background(wibox.container.margin(wibox.widget { kernelicon, kernel, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#f07178"),
+            arrow("#f07178", "#ffb26b"),
+            wibox.container.background(wibox.container.margin(wibox.widget { updicon, checkupd, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#ffb26b"),
+            arrow("#ffb26b", "#719eff"),
+            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#719eff"),
+            arrow("#719eff", "#c387ea"),
+            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#c387ea"),
+            arrow("#c387ea", "#b7e07c"),
+            wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#b7e07c"),
+            arrow("#b7e07c", "#82dbff"),
+            wibox.container.background(wibox.container.margin(clock, 4, 8), "#82dbff"),
+            arrow("#82dbff", "alpha"),
             wibox.layout.margin(wibox.widget.systray(), 1, 1, 1, 1),
             s.mylayoutbox,
         },
