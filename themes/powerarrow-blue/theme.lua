@@ -10,6 +10,7 @@ shape = require("gears.shape")
 local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
+local dpi   = require("beautiful.xresources").apply_dpi
 
 local math, string, os = math, string, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -17,7 +18,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 --theme.wallpaper                                 = theme.dir .. "/starwars.jpg"
-theme.font                                      = "Cascadia Code Bold 10"
+theme.font                                      = "Cascadia Code Bold 11"
 theme.taglist_font                              = "Cascadia Code Bold 12"
 theme.tasklist_font										= "Cascadia Code Bold 11"
 theme.fg_normal                                 = "#1b1e2b"
@@ -31,17 +32,17 @@ theme.taglist_fg_focus                          = "#1b1e2b"
 theme.taglist_bg_focus                          = "#548bff"
 theme.taglist_bg_empty									= "#1b1e2b"
 theme.taglist_fg_empty									= "#a8b4ff"
-theme.taglist_fg_occupied								= "#548bff"
-theme.taglist_bg_occupied								= "#404661"
+theme.taglist_fg_occupied								= "#f07178"
+theme.taglist_bg_occupied								= "#1b1e2b"
 theme.tasklist_bg_focus                         = "#1b1e2b"
-theme.tasklist_fg_focus                         = "#ffb26b"
+theme.tasklist_fg_focus                         = "#ffb276"
 theme.border_width                              = 2
-theme.border_normal                             = "#1b1e2b"
+theme.border_normal                             = "#404661"
 theme.border_focus                              = "#ffb26b"
 theme.border_marked                             = "#CC9393"
 theme.menu_height                               = 27
 theme.menu_width                                = 230
-theme.menu_font                                 = "Cantarell Bold 11"
+theme.menu_font                                 = "Ubuntu SemiBold 12"
 theme.menu_fg_focus										= "#1b1e2b"
 theme.menu_fg_normal										= "#a8b4ff"
 theme.menu_bg_focus										= "#548bff"
@@ -51,8 +52,17 @@ theme.notification_fg									= "#a8b4ff"
 theme.systray_icon_spacing                      = 2
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
 theme.awesome_icon                              = theme.dir .. "/icons/awesome.png"
-theme.taglist_squares_sel                       = theme.dir .. "/icons/square_sel.png"
-theme.taglist_squares_unsel                     = theme.dir .. "/icons/square_unsel.png"
+--theme.taglist_squares_sel                       = gears.surface.load_from_shape(6, 6, gears.shape.rectangle, theme.taglist_bg_focus)
+--theme.taglist_squares_sel_empty                 = gears.surface.load_from_shape(6, 6, gears.shape.rectangle, theme.taglist_bg_focus)
+--theme.taglist_squares_unsel                     = gears.surface.load_from_shape(6, 6, gears.shape.rectangle, theme.taglist_fg_occupied)
+--theme.taglist_squares_unsel_empty               = gears.surface.load_from_shape(6, 6, gears.shape.rectangle, theme.taglist_bg_empty)
+theme.taglist_spacing									= 4
+theme.taglist_shape										= gears.shape.rectangle
+theme.taglist_shape_border_width						= 1
+theme.taglist_shape_border_width_focus						= 1
+theme.taglist_shape_border_color						= "#1b1e2b"
+theme.taglist_shape_border_color_focus				= "#548bff"
+theme.taglist_shape_border_width_empty				= 1 
 theme.layout_tile                               = theme.dir .. "/icons/tile.png"
 theme.layout_tileleft                           = theme.dir .. "/icons/tileleft.png"
 theme.layout_tilebottom                         = theme.dir .. "/icons/tilebottom.png"
@@ -81,7 +91,7 @@ theme.widget_scissors                           = theme.dir .. "/icons/scissors.
 theme.widget_weather                            = theme.dir .. "/icons/dish.png"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.useless_gap                               = 3
+theme.useless_gap                               = 4
 
 local markup = lain.util.markup
 local separators = lain.util.separators
@@ -252,7 +262,7 @@ function theme.at_screen_connect(s)
             --spr,
 				--mylauncher,
             s.mytaglist,
-            --spr,
+				--spr,
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
