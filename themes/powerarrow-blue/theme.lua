@@ -17,7 +17,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 --theme.wallpaper                                 = theme.dir .. "/starwars.jpg"
-theme.font                                      = "Cascadia Code Bold 11"
+theme.font                                      = "Cascadia Code Bold 10"
 theme.taglist_font                              = "Cascadia Code Bold 12"
 theme.tasklist_font										= "Cascadia Code Bold 11"
 theme.fg_normal                                 = "#1b1e2b"
@@ -116,7 +116,7 @@ theme.cal = lain.widget.cal({
     attach_to = { clock },
     notification_preset = {
         font = "Ubuntu Mono Medium 12",
-        fg   = theme.fg_normal,
+        fg   = "#a8b4ff",
         bg   = theme.bg_normal
     }
 })
@@ -146,7 +146,7 @@ Copy/paste the city code in the URL to this file in city_id
 local weathericon = wibox.widget.textbox("  ")
 theme.weather = lain.widget.weather({
     city_id = 4145719, -- placeholder (Belgium)
-    notification_preset = { font = "Ubuntu Mono Medium 11", fg = theme.fg_normal },
+    notification_preset = { font = "Ubuntu Mono Medium 11", fg = "#a8b4ff" },
     weather_na_markup = markup.fontfg(theme.font, "#1b1e2b", "N/A "),
     settings = function()
         descr = weather_now["weather"][1]["description"]:lower()
@@ -274,9 +274,9 @@ function theme.at_screen_connect(s)
            -- wibox.container.background(wibox.container.margin(wibox.widget { mailicon, mail and mail.widget, layout = wibox.layout.align.horizontal }, 4, 7), "#343434"),
            
 
-	    arrow("alpha", "#f07178"),
-            wibox.container.background(wibox.container.margin(wibox.widget { kernelicon, kernel, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#f07178"),
-            arrow("#f07178", "#ffb26b"),
+	    arrow("alpha", "#82dbff"),
+            wibox.container.background(wibox.container.margin(wibox.widget { kernelicon, kernel, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#82dbff"),
+            arrow("#82dbff", "#ffb26b"),
             wibox.container.background(wibox.container.margin(wibox.widget { updicon, checkupd, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#ffb26b"),
             arrow("#ffb26b", "#719eff"),
             wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#719eff"),
@@ -284,9 +284,9 @@ function theme.at_screen_connect(s)
             wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#c387ea"),
             arrow("#c387ea", "#b7e07c"),
             wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#b7e07c"),
-            arrow("#b7e07c", "#82dbff"),
-            wibox.container.background(wibox.container.margin(clock, 4, 8), "#82dbff"),
-            arrow("#82dbff", "alpha"),
+            arrow("#b7e07c", "#f07178"),
+            wibox.container.background(wibox.container.margin(clock, 4, 8), "#f07178"),
+            arrow("#f07178", "alpha"),
             wibox.layout.margin(wibox.widget.systray(), 1, 1, 1, 1),
             s.mylayoutbox,
         },
