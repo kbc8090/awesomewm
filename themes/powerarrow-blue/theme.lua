@@ -288,7 +288,7 @@ function theme.at_screen_connect(s)
             wibox.container.background(wibox.container.margin(clock, 4, 8), "#f07178"),
             arrow("#f07178", "alpha"),
             wibox.layout.margin(wibox.widget.systray(), 1, 1, 1, 1),
-            s.mylayoutbox,
+--            s.mylayoutbox,
         },
     }
 end
