@@ -174,7 +174,7 @@ theme.volume = lain.widget.alsa({
         elseif tonumber(volume_now.level) == 0 then
             volicon:set_text(" ")
         elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_text("  ")
+            volicon:set_text(" 墳 ")
         else
             volicon:set_text("  ")
         end
