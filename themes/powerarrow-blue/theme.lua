@@ -18,9 +18,9 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 --theme.wallpaper                                 = theme.dir .. "/starwars.jpg"
-theme.font                                      = "JetBrains Mono Bold 10"
-theme.taglist_font                              = "JetBrains Mono Bold 12"
-theme.tasklist_font										= "JetBrains Mono Bold 11"
+theme.font                                      = "Ubuntu Mono Bold 12"
+theme.taglist_font                              = "Ubuntu Mono Bold 14"
+theme.tasklist_font										= "Ubuntu Mono Bold 12"
 theme.fg_normal                                 = "#1b1e2b"
 theme.fg_focus                                  = "#35539c"
 theme.fg_urgent                                 = "#ffb26b"
@@ -117,7 +117,7 @@ local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     "date +'%a, %b %d %I:%M %p'", 60,
     function(widget, stdout)
-        widget:set_markup("  " .. markup.font(theme.font, stdout))
+        widget:set_markup("   " .. markup.font(theme.font, stdout))
     end
 )
 
@@ -138,7 +138,7 @@ theme.volume = lain.widget.pulsebar({
 })
 
 -- MEM
-local memicon = wibox.widget.textbox(" ")
+local memicon = wibox.widget.textbox("  ")
 local mem = lain.widget.mem({
     settings = function()
         widget:set_markup(markup.font(theme.font, " " .. mem_now.used .. "MB "))
@@ -153,7 +153,7 @@ Type in the name of your city
 Copy/paste the city code in the URL to this file in city_id
 --]]
 --local weathericon = wibox.widget.imagebox(theme.widget_weather)
-local weathericon = wibox.widget.textbox("  ")
+local weathericon = wibox.widget.textbox("   ")
 theme.weather = lain.widget.weather({
     city_id = 4145719, -- placeholder (Belgium)
     notification_preset = { font = "Ubuntu Mono Medium 11", fg = "#a8b4ff" },
@@ -174,9 +174,9 @@ theme.volume = lain.widget.alsa({
         elseif tonumber(volume_now.level) == 0 then
             volicon:set_text(" ")
         elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_text(" ")
+            volicon:set_text("  ")
         else
-            volicon:set_text(" ")
+            volicon:set_text("  ")
         end
 
         widget:set_markup(markup.font(theme.font, " " .. volume_now.level .. "% "))
@@ -187,12 +187,12 @@ theme.volume = lain.widget.alsa({
 --local checkupd = awful.widget.watch('fish -c "checkupdates | wc -l"', 1200) 
 --local checkupd = awful.widget.watch('bash -c "set -o pipefail; checkupdates | wc -l"', 1200)
 --awful.spawn.easy_async_with_shell("checkupdates | wc -l", function(stdout)
-local kernelicon = wibox.widget.textbox("  ")
+local kernelicon = wibox.widget.textbox("   ")
 local kernel = awful.widget.watch('bash -c "uname -r"', 36000)
-local checkupd = awful.widget.watch('bash -c "sleep 5 && cat $HOME/.config/awesome/scripts/checktemp | wc -l"', 620, function(widget, stdout, stderr, exit) 
+local checkupd = awful.widget.watch('bash -c "sleep 5 && $HOME/.config/awesome/scripts/checkupdates.sh"', 620, function(widget, stdout, stderr, exit) 
     widget:set_markup(markup.fontfg(theme.font, "#1b1e2b", stdout .. " " .. stderr))
 end)
-local updicon = wibox.widget.textbox("  ")
+local updicon = wibox.widget.textbox("   ")
 local updiconblank = wibox.widget.textbox()
 updiconblank.text = " "
 

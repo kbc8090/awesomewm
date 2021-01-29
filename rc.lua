@@ -18,7 +18,7 @@ local naughty       = require("naughty")
 naughty.config.defaults['icon_size'] = 100
 --naughty.config.timeout = 15
 --naughty.config.default.font = "JetBrainsMono Nerd Font 11"
---naughty.config.font = "JetBrains Mono Medium 11"
+naughty.config.font = "JetBrainsMono Nerd Font 10"
 
 --local menubar       = require("menubar")
 
@@ -228,6 +228,7 @@ awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) 
 -- {{{ Mouse bindings
 root.buttons(my_table.join(
     awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end)
+--    awful.button({ }, 3, function () awful.util.spawn("jgmenu_run") end)
 ))
 -- }}}
 

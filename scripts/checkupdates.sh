@@ -1,3 +1,8 @@
 #!/bin/bash
-sleep 5 
-/usr/bin/checkupdates | wc -l
+upd=$(cat $HOME/.config/awesome/scripts/checktemp)
+if [[ $upd -eq 0 ]]
+then
+	echo -e "None"
+else
+	echo -e "$upd"
+fi
