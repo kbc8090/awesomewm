@@ -18,8 +18,8 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 --theme.wallpaper                                 = theme.dir .. "/starwars.jpg"
-theme.font                                      = "Ubuntu Mono Bold 12"
-theme.taglist_font                              = "Ubuntu Mono Bold 14"
+theme.font                                      = "Ubuntu Mono Bold 11"
+theme.taglist_font                              = "Ubuntu Mono Bold 12"
 theme.tasklist_font										= "Ubuntu Mono Bold 12"
 theme.fg_normal                                 = "#1b1e2b"
 theme.fg_focus                                  = "#35539c"
@@ -36,11 +36,13 @@ theme.taglist_fg_occupied								= "#f07178"
 theme.taglist_bg_occupied								= "#1b1e2b"
 theme.tasklist_bg_focus                         = "#1b1e2b"
 theme.tasklist_fg_focus                         = "#ffb26b"
-theme.border_width                              = 2
+theme.border_width                              = 1
 theme.border_normal                             = "#404661"
 theme.border_focus                              = "#ffb26b"
 theme.border_marked                             = "#CC9393"
 theme.menu_height                               = 27
+theme.menu_border_color									= "#000000"
+theme.menu_border_width									= 1
 theme.menu_width                                = 230
 theme.menu_font                                 = "Ubuntu SemiBold 12"
 theme.menu_fg_focus										= "#1b1e2b"
@@ -252,7 +254,7 @@ function theme.at_screen_connect(s)
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 22, align = center_vertical, bg = theme.bg_normal, fg = theme.fg_normal, border_width = 1, border_color = "#000000" })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = 21, align = center_vertical, bg = theme.bg_normal, fg = theme.fg_normal, border_width = 1, border_color = "#000000" })
 
     -- Add widgets to the wibox
     s.mywibox:setup {

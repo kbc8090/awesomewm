@@ -21,7 +21,7 @@ function run {
 #run "lxsession"
 #run "pamac-tray"
 run "picom"
-run "urxvtd"
+#run "urxvtd"
 #xset r rate 300 60
 #run applications from startup
 #run "firefox"

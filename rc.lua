@@ -20,7 +20,7 @@ naughty.config.defaults['icon_size'] = 100
 --naughty.config.default.font = "JetBrainsMono Nerd Font 11"
 naughty.config.font = "JetBrainsMono Nerd Font 10"
 
---local menubar       = require("menubar")
+local menubar       = require("menubar")
 
 local lain          = require("lain")
 local freedesktop   = require("freedesktop")
@@ -216,7 +216,7 @@ awful.util.mymainmenu = freedesktop.menu.build({
         -- other triads can be put here
     }
 })
---menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
+menubar.utils.terminal = "urxvt" -- Set the Menubar terminal for applications that require it
 -- }}}
 
 -- Create a wibox for each screen and add it
@@ -227,8 +227,8 @@ awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) 
 
 -- {{{ Mouse bindings
 root.buttons(my_table.join(
-    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end)
---    awful.button({ }, 3, function () awful.util.spawn("jgmenu_run") end)
+--    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end)
+    awful.button({ }, 3, function () awful.util.spawn("jgmenu_run") end)
 ))
 -- }}}
 
@@ -242,7 +242,7 @@ globalkeys = my_table.join(
     -- dmenu
     awful.key({ modkey,  }, "d",
     function ()
-        awful.spawn(string.format("dmenu_run -i  -nb '#292d3e' -nf '#5898ed' -sb '#82AAFF' -sf '#292d3e' -fn 'Ubuntu Mono:style=Bold:size=16'"))
+        awful.spawn(string.format("dmenu_run -i  -h '22' -nb '#1b1e2b' -nf '#548bff' -sb '#548bff' -sf '#1b1e2b' -fn 'Ubuntu Mono:style=Bold:size=12'"))
 	end,
     {description = "show dmenu", group = "hotkeys"}),
     -- screenshots
@@ -250,10 +250,10 @@ globalkeys = my_table.join(
         {description = "Scrot", group = "screenshots"}),
     awful.key({ modkey1           }, "Print", function () awful.util.spawn( "xfce4-screenshooter" ) end,
         {description = "Xfce screenshot", group = "screenshots"}),
-    awful.key({ modkey }, "F1", function () awful.util.spawn( "chromium" ) end,
+    awful.key({ modkey }, "F1", function () awful.util.spawn( "chromium --force-dark-mode" ) end,
         {description = "Chromium", group = "screenshots"}),
-    awful.key({ modkey }, "F2", function () awful.util.spawn( "code" ) end,
-        {description = "Code", group = "screenshots"}),
+    awful.key({ modkey }, "F2", function () awful.util.spawn( "firefox" ) end,
+        {description = "Firefox", group = "screenshots"}),
     awful.key({ modkey1, "Shift"  }, "Print", function() awful.util.spawn("gnome-screenshot -i") end,
         {description = "Gnome screenshot", group = "screenshots"}),
 
@@ -625,6 +625,7 @@ awful.rules.rules = {
           "Font-manager",
           "Kruler",
           "Kvantum Manager",
+          "Io.github.celluloid_player.Celluloid",
           "Lxappearance",          
           "MessageWin",  -- kalarm.
           "Nitrogen",          
