@@ -254,10 +254,11 @@ function theme.at_screen_connect(s)
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 21, align = center_vertical, bg = theme.bg_normal, fg = theme.fg_normal, border_width = 0, border_color = "#000000" })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = 22, align = center_vertical, bg = theme.bg_normal, fg = theme.fg_normal, border_width = 0, border_color = "#000000" })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
+		 {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
@@ -302,7 +303,12 @@ function theme.at_screen_connect(s)
             wibox.layout.margin(wibox.widget.systray(), 1, 1, 1, 1),
 --            s.mylayoutbox,
         },
-    }
+
+    },
+	 bottom = 1,
+	 color = "#000000",
+	 widget = wibox.container.margin,
+}
 end
 
 return theme
