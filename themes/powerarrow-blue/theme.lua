@@ -36,6 +36,10 @@ theme.taglist_fg_occupied								= "#f07178"
 theme.taglist_bg_occupied								= "#1b1e2b"
 theme.tasklist_bg_focus                         = "#1b1e2b"
 theme.tasklist_fg_focus                         = "#ffb26b"
+theme.tasklist_bg_minimize								= "#1b1e2b"
+theme.tasklist_fg_minimize								= "#CC9393"
+theme.tasklist_fg_normal								= "#a8b4ff"
+theme.tasklist_bg_normal								= "#1b1e2b"
 theme.border_width                              = 2
 theme.border_normal                             = "#404661"
 theme.border_focus                              = "#ffb26b"
@@ -247,11 +251,7 @@ function theme.at_screen_connect(s)
     }
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-	    screen = s,
-	    filter = awful.widget.tasklist.filter.focused
-	    --buttons = awful.util.tasklist_buttons
-    }
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 22, align = center_vertical, bg = theme.bg_normal, fg = theme.fg_normal, border_width = 0, border_color = "#000000" })
