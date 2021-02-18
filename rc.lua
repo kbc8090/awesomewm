@@ -229,7 +229,7 @@ awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) 
 -- {{{ Mouse bindings
 root.buttons(my_table.join(
 --    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end)
-    awful.button({ }, 3, function () awful.util.spawn("jgmenu_run") end)
+    awful.button({ }, 3, function () awful.spawn("jgmenu_run", false) end)
 ))
 -- }}}
 
@@ -243,7 +243,7 @@ globalkeys = my_table.join(
     -- dmenu
     awful.key({ modkey,  }, "d",
     function ()
-        awful.spawn(string.format("dmenu_run -i  -h '21' -nb '#1b1e2b' -nf '#ce78ea' -sb '#548bff' -sf '#1b1e2b' -shb '#1b1e2b' -shf '#c387ea' -fn 'Ubuntu Mono:style=Bold:size=12'"))
+        awful.spawn(string.format("dmenu_run -i  -h '21' -nb '#1b1e2b' -nf '#ce78ea' -sb '#548bff' -sf '#1b1e2b' -shb '#1b1e2b' -shf '#c387ea' -fn 'Ubuntu Mono:style=Bold:size=12'"), false)
 	end,
     {description = "show dmenu", group = "hotkeys"}),
     -- screenshots
@@ -674,6 +674,7 @@ client.connect_signal("manage", function (c)
     end
 end)
 
+
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
     -- Custom
@@ -710,9 +711,9 @@ client.connect_signal("request::titlebars", function(c)
             layout  = wibox.layout.flex.horizontal
         },
         { -- Right
-            awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.stickybutton   (c),
-            awful.titlebar.widget.ontopbutton    (c),
+            --awful.titlebar.widget.maximizedbutton(c),
+            --awful.titlebar.widget.stickybutton   (c),
+            --awful.titlebar.widget.ontopbutton    (c),
             awful.titlebar.widget.closebutton    (c),
             layout = wibox.layout.fixed.horizontal()
         },
@@ -729,6 +730,7 @@ end)
 function border_adjust(c)
     if c.maximized then -- no borders if only 1 client visible
         c.border_width = 0
+		  awful.titlebar.hide(c)
     elseif #awful.screen.focused().clients > 0 then
         c.border_width = beautiful.border_width
         c.border_color = beautiful.border_focus
@@ -741,13 +743,14 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 
 -- Titlebars on Floating Windows
---client.connect_signal("property::floating", function(c)
---    if c.floating then
---        awful.titlebar.show(c)
---    else
---        awful.titlebar.hide(c)
---    end
---end)
+
+client.connect_signal("property::floating", function(c)
+    if c.floating then
+        awful.titlebar.show(c)
+    else
+        awful.titlebar.hide(c)
+    end
+end)
 
 
 -- }}}
