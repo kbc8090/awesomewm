@@ -110,7 +110,7 @@ awful.util.terminal = terminal
 --awful.util.tagnames = { "⠐", "⠡", "⠲", "⠵", "⠻", "⠿" }
 --awful.util.tagnames = { "⌘", "♐", "⌥", "ℵ" }
 --awful.util.tagnames = { " DEV ", " WWW ", " SYS ", " DOC ", " VBOX ", " CHAT ", " MUS ", " VID ", " GFX " }
-awful.util.tagnames = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 " }
+awful.util.tagnames = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 " }
 -- Use this : https://fontawesome.com/cheatsheet
 --awful.util.tagnames = { "", "", "", "", "" }
 awful.layout.suit.tile.left.mirror = true
@@ -253,6 +253,8 @@ globalkeys = my_table.join(
         {description = "Xfce screenshot", group = "screenshots"}),
     awful.key({ modkey }, "F1", function () awful.util.spawn( "chromium --force-dark-mode" ) end,
         {description = "Chromium", group = "screenshots"}),
+    awful.key({ modkey }, "n", function () awful.util.spawn( "nitrogen" ) end,
+        {description = "Nitrogen", group = "screenshots"}),
     awful.key({ modkey }, "F2", function () awful.util.spawn( "firefox" ) end,
         {description = "Firefox", group = "screenshots"}),
     awful.key({ modkey1, "Shift"  }, "Print", function() awful.util.spawn("gnome-screenshot -i") end,
@@ -370,6 +372,8 @@ globalkeys = my_table.join(
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q",  function () awful.spawn.with_shell('killall awesome') end,
               {description = "quit awesome", group = "awesome"}),
+
+
 
     awful.key({ modkey,    }, "semicolon",     function () awful.tag.incmwfact( 0.025)          end,
               {description = "increase master width factor", group = "layout"}),
@@ -696,7 +700,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, {size = 20}) : setup {
+    awful.titlebar(c, {size = 22}) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
             buttons = buttons,
@@ -705,7 +709,8 @@ client.connect_signal("request::titlebars", function(c)
         { -- Middle
             { -- Title
                 align  = "center",
-                widget = awful.titlebar.widget.titlewidget(c)
+                widget = awful.titlebar.widget.titlewidget(c),
+					 font = "Ubuntu Mono Bold 12"
             },
             buttons = buttons,
             layout  = wibox.layout.flex.horizontal
@@ -734,6 +739,9 @@ function border_adjust(c)
     elseif #awful.screen.focused().clients > 0 then
         c.border_width = beautiful.border_width
         c.border_color = beautiful.border_focus
+		  if c.floating then
+			  c.border_color = beautiful.border_color_floating
+		  end
     end
 end
 
@@ -747,8 +755,10 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 client.connect_signal("property::floating", function(c)
     if c.floating then
         awful.titlebar.show(c)
+		  c.border_color = beautiful.border_color_floating
     else
         awful.titlebar.hide(c)
+		  c.border_color = beautiful.border_focus
     end
 end)
 
