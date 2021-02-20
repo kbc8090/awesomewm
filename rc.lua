@@ -18,7 +18,8 @@ local naughty       = require("naughty")
 naughty.config.defaults['icon_size'] = 100
 --naughty.config.timeout = 15
 --naughty.config.default.font = "JetBrainsMono Nerd Font 11"
-naughty.config.font = "JetBrainsMono Nerd Font 10"
+naughty.config.font = "Ubuntu Mono Bold 12"
+naughty.config.position = "bottom_right"
 
 local menubar       = require("menubar")
 
@@ -229,7 +230,9 @@ awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) 
 -- {{{ Mouse bindings
 root.buttons(my_table.join(
 --    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end)
-    awful.button({ }, 3, function () awful.spawn("jgmenu_run", false) end)
+    awful.button({ }, 3, function () awful.spawn("jgmenu_run", false) end),
+	 awful.button({ modkey }, 4, awful.tag.viewnext),
+    awful.button({ modkey }, 5, awful.tag.viewprev)
 ))
 -- }}}
 
@@ -623,6 +626,7 @@ awful.rules.rules = {
           "Arandr",
           "Audacious",          
           "Blueberry",
+          "Deadbeef",
           "Galculator",
           "Gnome-font-viewer",
           "Gpick",
@@ -700,7 +704,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, {size = 22}) : setup {
+    awful.titlebar(c, {size = 19}) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
             buttons = buttons,
@@ -710,15 +714,15 @@ client.connect_signal("request::titlebars", function(c)
             { -- Title
                 align  = "center",
                 widget = awful.titlebar.widget.titlewidget(c),
-					 font = "Ubuntu Mono Bold 12"
+					 font = "JetBrains Mono Bold 10"
             },
             buttons = buttons,
             layout  = wibox.layout.flex.horizontal
         },
         { -- Right
-            --awful.titlebar.widget.maximizedbutton(c),
+            awful.titlebar.widget.minimizebutton(c),
             --awful.titlebar.widget.stickybutton   (c),
-            --awful.titlebar.widget.ontopbutton    (c),
+            awful.titlebar.widget.ontopbutton    (c),
             awful.titlebar.widget.closebutton    (c),
             layout = wibox.layout.fixed.horizontal()
         },
@@ -735,12 +739,14 @@ end)
 function border_adjust(c)
     if c.maximized then -- no borders if only 1 client visible
         c.border_width = 0
+		  c.border_color = beautiful.border_focus
 		  awful.titlebar.hide(c)
     elseif #awful.screen.focused().clients > 0 then
         c.border_width = beautiful.border_width
         c.border_color = beautiful.border_focus
 		  if c.floating then
 			  c.border_color = beautiful.border_color_floating
+			  c.border_width = 1
 		  end
     end
 end
@@ -756,9 +762,11 @@ client.connect_signal("property::floating", function(c)
     if c.floating then
         awful.titlebar.show(c)
 		  c.border_color = beautiful.border_color_floating
+		  c.border_width = 1
     else
         awful.titlebar.hide(c)
 		  c.border_color = beautiful.border_focus
+		  c.border_width = beautiful.border_width
     end
 end)
 
