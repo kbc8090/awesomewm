@@ -15,7 +15,7 @@ local beautiful     = require("beautiful")
 
 -- Notification library
 local naughty       = require("naughty")
-naughty.config.defaults['icon_size'] = 100
+naughty.config.defaults['icon_size'] = 80
 --naughty.config.timeout = 15
 --naughty.config.default.font = "JetBrainsMono Nerd Font 11"
 naughty.config.font = "Ubuntu Mono Bold 12"
