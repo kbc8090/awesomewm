@@ -456,7 +456,11 @@ clientkeys = my_table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey,    }, "q",      function (c) c:kill()                         end,
               {description = "close", group = "hotkeys"}),
-    awful.key({ modkey, }, "space",  awful.client.floating.toggle                     ,
+    awful.key({ modkey, }, "space",  
+		 function (c)
+			 awful.client.floating.toggle()
+			-- c.maximized = false
+		 end,
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
@@ -682,6 +686,17 @@ client.connect_signal("manage", function (c)
     end
 end)
 
+client.connect_signal("property::floating", function(c)
+    if c.floating then
+        awful.titlebar.show(c)
+		  c.border_color = beautiful.border_color_floating
+		  c.border_width = 1
+    else
+        awful.titlebar.hide(c)
+		  c.border_color = beautiful.border_focus
+		  c.border_width = beautiful.border_width
+    end
+end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
@@ -738,13 +753,14 @@ end)
 -- No border for maximized clients
 function border_adjust(c)
     if c.maximized then -- no borders if only 1 client visible
-        c.border_width = 0
-		  c.border_color = beautiful.border_focus
 		  awful.titlebar.hide(c)
+        c.border_width = 0
+		  --c.border_color = beautiful.border_focus
     elseif #awful.screen.focused().clients > 0 then
         c.border_width = beautiful.border_width
         c.border_color = beautiful.border_focus
 		  if c.floating then
+			  awful.titlebar.show(c)
 			  c.border_color = beautiful.border_color_floating
 			  c.border_width = 1
 		  end
@@ -758,17 +774,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- Titlebars on Floating Windows
 
-client.connect_signal("property::floating", function(c)
-    if c.floating then
-        awful.titlebar.show(c)
-		  c.border_color = beautiful.border_color_floating
-		  c.border_width = 1
-    else
-        awful.titlebar.hide(c)
-		  c.border_color = beautiful.border_focus
-		  c.border_width = beautiful.border_width
-    end
-end)
+
 
 
 -- }}}
