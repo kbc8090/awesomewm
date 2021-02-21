@@ -458,8 +458,8 @@ clientkeys = my_table.join(
               {description = "close", group = "hotkeys"}),
     awful.key({ modkey, }, "space",  
 		 function (c)
-			 awful.client.floating.toggle()
-			-- c.maximized = false
+			 c.maximized = false
+			 awful.client.floating.toggle(c)
 		 end,
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
