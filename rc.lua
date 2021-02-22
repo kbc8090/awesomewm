@@ -314,8 +314,8 @@ globalkeys = my_table.join(
 
     -- By direction client focus
 
-    awful.key({ modkey,           }, "w", function () awful.util.mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"}),
+    --awful.key({ modkey,           }, "w", function () awful.util.mymainmenu:show() end,
+      --        {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
@@ -355,8 +355,8 @@ globalkeys = my_table.join(
               {description = "decrement useless gaps", group = "tag"}),
 
     -- Dynamic tagging
-    awful.key({ modkey, "Shift" }, "n", function () lain.util.add_tag() end,
-              {description = "add new tag", group = "tag"}),
+    --awful.key({ modkey, "Shift" }, "n", function () lain.util.add_tag() end,
+     --         {description = "add new tag", group = "tag"}),
     awful.key({ modkey, "Control" }, "r", function () lain.util.rename_tag() end,
               {description = "rename tag", group = "tag"}),
     awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(-1) end,
@@ -406,11 +406,16 @@ globalkeys = my_table.join(
               end,
               {description = "restore minimized", group = "client"}),
 
-    -- ALSA volume control
+    -- ALSA volume control 
     --awful.key({ modkey1 }, "Up",
     awful.key({ modkey }, "KP_Add",
         function ()
             os.execute(string.format("amixer -q set %s 5%%+", beautiful.volume.channel))
+            beautiful.volume.update()
+        end),
+    awful.key({ modkey, "Shift" }, "KP_Add",
+        function ()
+            os.execute(string.format("pactl set-sink-volume 0 +5%%", beautiful.volume.channel))
             beautiful.volume.update()
         end),
     --awful.key({ modkey1 }, "Down",
@@ -573,14 +578,14 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons,
                      screen = awful.screen.preferred,
-                     placement = awful.placement.no_overlap+awful.placement.no_offscreen,
+                     placement = awful.placement.centered+awful.placement.no_overlap+awful.placement.no_offscreen,
                      size_hints_honor = false
      }
     },
 
     -- Titlebars
-    { rule_any = { type = { "dialog", "normal" } },
-      properties = { titlebars_enabled = false } },
+    { rule_any = { type = { "dialog" } },
+      properties = { titlebars_enabled = true } },
 
     -- Set applications to always map on the tag 1 on screen 1.
     -- find class or role via xprop command
