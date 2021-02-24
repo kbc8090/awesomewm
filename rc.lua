@@ -246,7 +246,7 @@ globalkeys = my_table.join(
     -- dmenu
     awful.key({ modkey,  }, "d",
     function ()
-        awful.spawn(string.format("dmenu_run -i  -h '21' -nb '#1b1e2b' -nf '#ce78ea' -sb '#548bff' -sf '#1b1e2b' -shb '#1b1e2b' -shf '#c387ea' -fn 'Ubuntu Mono:style=Bold:size=12'"), false)
+        awful.spawn(string.format("dmenu_run -i  -h '21' -nb '#1b1e2b' -nf '#a8b4ff' -sb '#f07178' -sf '#1b1e2b' -shb '#1b1e2b' -shf '#a8b4ff' -fn 'Ubuntu Mono:style=Bold:size=12'"), false)
 	end,
     {description = "show dmenu", group = "hotkeys"}),
     -- screenshots
