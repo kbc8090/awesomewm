@@ -42,13 +42,13 @@ theme.tasklist_fg_normal								= "#a8b4ff"
 theme.tasklist_bg_normal								= "#1b1e2b"
 theme.titlebar_fg_normal								= "#a8b4ff"
 theme.titlebar_bg_normal								= "#404661"
-theme.titlebar_bg_focus									= "#c387ea"
+theme.titlebar_bg_focus									= "#f07178"
 theme.titlebar_fg_focus									= "#1b1e2b"
 theme.border_width                              = 2
 theme.border_normal                             = "#404661"
 theme.border_focus                              = "#ffb26b"
 theme.border_marked                             = "#CC9393"
-theme.border_color_floating							= "#c387ea"
+theme.border_color_floating							= "#f07178"
 theme.menu_height                               = 27
 theme.menu_border_color									= "#000000"
 theme.menu_border_width									= 1
@@ -123,7 +123,8 @@ theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.useless_gap                               = 4
+--theme.titlebar.enable_tooltip							= false
+theme.useless_gap                               = 2
 
 local markup = lain.util.markup
 local separators = lain.util.separators
@@ -171,6 +172,16 @@ theme.volume = lain.widget.pulsebar({
 
 -- MEM
 local memicon = wibox.widget.textbox("  ")
+
+local memtooltip = awful.tooltip {
+    objects        = { memicon },
+	 awful.spawn.easy_async_with_shell(command, function()
+    awful.spawn.easy_async_with_shell("cat /home/kbc/.config/awesome/scripts/checktemp", function(stdout)
+        mylabel.text = "fuck off"
+    end)
+ end)
+}
+
 local mem = lain.widget.mem({
     settings = function()
         widget:set_markup(markup.font(theme.font, " " .. mem_now.used .. "MB "))
@@ -187,7 +198,7 @@ Copy/paste the city code in the URL to this file in city_id
 --local weathericon = wibox.widget.imagebox(theme.widget_weather)
 local weathericon = wibox.widget.textbox("   ")
 theme.weather = lain.widget.weather({
-    city_id = 4145719, -- placeholder (Belgium)
+    city_id = 4156404, -- placeholder (Belgium)
     notification_preset = { font = "Ubuntu Mono Medium 11", fg = "#a8b4ff" },
     weather_na_markup = markup.fontfg(theme.font, "#1b1e2b", "N/A "),
     settings = function()
@@ -221,6 +232,7 @@ theme.volume = lain.widget.alsa({
 --awful.spawn.easy_async_with_shell("checkupdates | wc -l", function(stdout)
 local kernelicon = wibox.widget.textbox("   ")
 local kernel = awful.widget.watch('bash -c "uname -r"', 36000)
+local wttr = awful.widget.watch('/home/kbc/.config/awesome/scripts/wttr.sh', 600)
 local checkupd = awful.widget.watch('bash -c "sleep 5 && $HOME/.config/awesome/scripts/checkupdates.sh"', 620, function(widget, stdout, stderr, exit) 
     widget:set_markup(markup.fontfg(theme.font, "#1b1e2b", stdout .. " " .. stderr))
 	 valign = "center"
@@ -323,7 +335,7 @@ function theme.at_screen_connect(s)
             arrow("#719eff", "#c387ea"),
             wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#c387ea"),
             arrow("#c387ea", "#b7e07c"),
-            wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#b7e07c"),
+            wibox.container.background(wibox.container.margin(wibox.widget { updiconblank, wttr, layout = wibox.layout.align.horizontal }, 3, 3), "#b7e07c"),
             arrow("#b7e07c", "#f07178"),
             wibox.container.background(wibox.container.margin(clock, 4, 8), "#f07178"),
             arrow("#f07178", "alpha"),
