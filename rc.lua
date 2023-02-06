@@ -102,7 +102,7 @@ local filemanager       = "thunar"
 local mailclient        = "geary"
 local mediaplayer       = "vlc"
 local scrlocker         = "slimlock"
-local terminal          = "urxvt"
+local terminal          = "alacritty -e fish"
 local virtualmachine    = "virtualbox"
 
 -- awesome variables
@@ -659,6 +659,7 @@ awful.rules.rules = {
           "veromix",
           "Viewnior",          
           "vlc",           
+          "mpv",           
           "Xfce4-appfinder",
 	  "xtightvncviewer"},
 
