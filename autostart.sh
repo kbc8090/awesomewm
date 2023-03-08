@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
-function run {
-  if ! pgrep $1 ;
+run () {
+  if ! pgrep "$1" ;
   then
-    $@&
+    "$@"&
   fi
 }
 #run "xrandr --output VGA-1 --primary --mode 1360x768 --pos 0x0 --rotate normal"
