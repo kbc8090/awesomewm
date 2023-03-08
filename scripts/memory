@@ -1,0 +1,3 @@
+#!/bin/sh
+
+free -h | nawk '/Mem:/ {gsub(/i/,""); print $3 "/" $2 " "}'

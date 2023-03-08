@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 #weather="$(curl -s "wttr.in/Gainesville?format=3")"
 #echo "$weather "
