@@ -21,10 +21,10 @@ naughty.config.defaults['icon_size'] = 80
 naughty.config.font = "Ubuntu Mono Bold 12"
 naughty.config.position = "bottom_right"
 
-local menubar       = require("menubar")
+-- local menubar       = require("menubar")
 
 local lain          = require("lain")
-local freedesktop   = require("freedesktop")
+-- local freedesktop   = require("freedesktop")
 
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
@@ -33,6 +33,7 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 -- }}}
 
+awesome.set_preferred_icon_size(16)
 
 
 -- {{{ Error handling
@@ -63,11 +64,11 @@ end
 
 
 -- {{{ Autostart windowless processes
-local function run_once(cmd_arr)
-    for _, cmd in ipairs(cmd_arr) do
-        awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
-    end
-end
+-- local function run_once(cmd_arr)
+--     for _, cmd in ipairs(cmd_arr) do
+--         awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
+--     end
+-- end
 
 --run_once({ "unclutter -root" }) -- entries must be comma-separated
 -- }}}
@@ -98,11 +99,12 @@ local modkey1      = "Control"
 local browser           = "chromium"
 local editor            = os.getenv("EDITOR") or "nvim"
 local editorgui         = "geany"
-local filemanager       = "thunar"
+local filemanager       = "pcmanfm"
 local mailclient        = "geary"
 local mediaplayer       = "vlc"
 local scrlocker         = "slimlock"
-local terminal          = "alacritty -e fish"
+-- local terminal          = "alacritty"
+local terminal          = "st"
 local virtualmachine    = "virtualbox"
 
 -- awesome variables
@@ -111,33 +113,33 @@ awful.util.terminal = terminal
 --awful.util.tagnames = { "⠐", "⠡", "⠲", "⠵", "⠻", "⠿" }
 --awful.util.tagnames = { "⌘", "♐", "⌥", "ℵ" }
 --awful.util.tagnames = { " DEV ", " WWW ", " SYS ", " DOC ", " VBOX ", " CHAT ", " MUS ", " VID ", " GFX " }
-awful.util.tagnames = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 " }
+awful.util.tagnames = { " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 " }
 -- Use this : https://fontawesome.com/cheatsheet
 --awful.util.tagnames = { "", "", "", "", "" }
 awful.layout.suit.tile.left.mirror = true
 awful.layout.layouts = {
-    awful.layout.suit.tile,
---    awful.layout.suit.floating,
---    awful.layout.suit.tile.left,
---    awful.layout.suit.tile.bottom,
---    awful.layout.suit.tile.top,
-    --awful.layout.suit.fair,
-    --awful.layout.suit.fair.horizontal,
---    awful.layout.suit.spiral,
---    awful.layout.suit.spiral.dwindle,
---    awful.layout.suit.max,
-    --awful.layout.suit.max.fullscreen,
---    awful.layout.suit.magnifier,
-    --awful.layout.suit.corner.nw,
-    --awful.layout.suit.corner.ne,
-    --awful.layout.suit.corner.sw,
-    --awful.layout.suit.corner.se,
-    --lain.layout.cascade,
-    --lain.layout.cascade.tile,
-    --lain.layout.centerwork,
-    --lain.layout.centerwork.horizontal,
-    --lain.layout.termfair,
-    --lain.layout.termfair.center,
+  awful.layout.suit.tile,
+  -- awful.layout.suit.floating,
+  -- awful.layout.suit.tile.left,
+  awful.layout.suit.tile.bottom,
+  -- awful.layout.suit.tile.top,
+  -- awful.layout.suit.fair,
+  -- awful.layout.suit.fair.horizontal,
+  -- awful.layout.suit.spiral,
+  -- awful.layout.suit.spiral.dwindle,
+  awful.layout.suit.max,
+  -- awful.layout.suit.max.fullscreen,
+  -- awful.layout.suit.magnifier,
+  -- awful.layout.suit.corner.nw,
+  -- awful.layout.suit.corner.ne,
+  -- awful.layout.suit.corner.sw,
+  -- awful.layout.suit.corner.se,
+  -- lain.layout.cascade,
+  -- lain.layout.cascade.tile,
+  -- lain.layout.centerwork,
+  -- lain.layout.centerwork.horizontal,
+  -- lain.layout.termfair,
+  -- lain.layout.termfair.center,
 }
 
 awful.util.taglist_buttons = my_table.join(
@@ -148,11 +150,11 @@ awful.util.taglist_buttons = my_table.join(
         end
     end),
     awful.button({ }, 3, awful.tag.viewtoggle),
-    awful.button({ modkey }, 3, function(t)
-        if client.focus then
-            client.focus:toggle_tag(t)
-        end
-    end),
+    -- awful.button({ modkey }, 3, function(t)
+    --     if client.focus then
+    --         client.focus:toggle_tag(t)
+    --     end
+    -- end),
     awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
     awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
 )
@@ -182,7 +184,7 @@ awful.util.tasklist_buttons = my_table.join(
     awful.button({ }, 2, function (c) c:kill() end)
 )
 
-lain.layout.termfair.nmaster           = 3
+-- lain.layout.termfair.nmaster           = 3
 --lain.layout.termfair.ncol              = 1
 --lain.layout.termfair.center.nmaster    = 3
 --lain.layout.termfair.center.ncol       = 1
@@ -203,22 +205,22 @@ beautiful.init(string.format(gears.filesystem.get_configuration_dir() .. "/theme
 --   { "Manual", terminal .. " -e 'man awesome'" },
 --}
 
-awful.util.mymainmenu = freedesktop.menu.build({
-    icon_size = beautiful.menu_height or 16,
-    before = {
-        { "Awesome Hotkeys", function() return false, hotkeys_popup.show_help end, beautiful.awesome_icon }
-        --{ "Atom", "atom" },
-        -- other triads can be put here
-    },
-    after = {
-        { "Log Out", function() awesome.quit() end, "/usr/share/icons/Papirus/24x24/apps/system-log-out.svg" },
-        { "Reboot", "systemctl reboot", "/usr/share/icons/Papirus/24x24/apps/system-reboot.svg" },
-		  { "Restart Awesome", awesome.restart, "/usr/share/icons/Papirus/24x24/apps/systemback.svg" },
-        { "Shutdown", "systemctl poweroff", "/usr/share/icons/Papirus/24x24/apps/system-shutdown.svg" }
-        -- other triads can be put here
-    }
-})
-menubar.utils.terminal = "urxvt" -- Set the Menubar terminal for applications that require it
+-- awful.util.mymainmenu = freedesktop.menu.build({
+--     icon_size = beautiful.menu_height or 16,
+--     before = {
+--         { "Awesome Hotkeys", function() return false, hotkeys_popup.show_help end, beautiful.awesome_icon }
+--         --{ "Atom", "atom" },
+--         -- other triads can be put here
+--     },
+--     after = {
+--         { "Log Out", function() awesome.quit() end, "/usr/share/icons/Papirus/24x24/apps/system-log-out.svg" },
+--         { "Reboot", "systemctl reboot", "/usr/share/icons/Papirus/24x24/apps/system-reboot.svg" },
+-- 		  { "Restart Awesome", awesome.restart, "/usr/share/icons/Papirus/24x24/apps/systemback.svg" },
+--         { "Shutdown", "systemctl poweroff", "/usr/share/icons/Papirus/24x24/apps/system-shutdown.svg" }
+--         -- other triads can be put here
+--     }
+-- })
+-- menubar.utils.terminal = "st" -- Set the Menubar terminal for applications that require it
 -- }}}
 
 -- Create a wibox for each screen and add it
@@ -228,12 +230,12 @@ awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) 
 
 
 -- {{{ Mouse bindings
-root.buttons(my_table.join(
+root.buttons(
 --    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end)
-    awful.button({ }, 3, function () awful.spawn("jgmenu_run", false) end),
-	 awful.button({ modkey }, 4, awful.tag.viewnext),
-    awful.button({ modkey }, 5, awful.tag.viewprev)
-))
+    awful.button({ }, 3, function () awful.spawn("jgmenu_run", false) end)
+	 -- awful.button({ modkey }, 4, awful.tag.viewnext),
+    -- awful.button({ modkey }, 5, awful.tag.viewprev)
+)
 -- }}}
 
 
@@ -246,7 +248,7 @@ globalkeys = my_table.join(
     -- dmenu
     awful.key({ modkey,  }, "d",
     function ()
-        awful.spawn(string.format("dmenu_run -i  -h '21' -nb '#1b1e2b' -nf '#a8b4ff' -sb '#f07178' -sf '#1b1e2b' -shb '#1b1e2b' -shf '#a8b4ff' -fn 'Ubuntu Mono:style=Bold:size=12'"), false)
+        awful.spawn(string.format("dmenu_run -i  -h '21' -nb '#1b1e2b' -nf '#a8b4ff' -sb '#c387ea' -sf '#1b1e2b' -shb '#1b1e2b' -shf '#a8b4ff' -fn 'JetBrains Mono:style=ExtraBold:size=10'"), false)
 	end,
     {description = "show dmenu", group = "hotkeys"}),
     -- screenshots
@@ -268,8 +270,8 @@ globalkeys = my_table.join(
 
     -- Hotkeys Awesome
 
-    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
-        {description = "show help", group="awesome"}),
+    -- awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
+    --     {description = "show help", group="awesome"}),
 
     -- Tag browsing with modkey
     --awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -349,9 +351,9 @@ globalkeys = my_table.join(
         {description = "toggle wibox", group = "awesome"}),
 
     -- On the fly useless gaps change
-    awful.key({ altkey, "Control" }, "j", function () lain.util.useless_gaps_resize(1) end,
+    awful.key({ modkey }, "equal", function () lain.util.useless_gaps_resize(1) end,
               {description = "increment useless gaps", group = "tag"}),
-    awful.key({ altkey, "Control" }, "l", function () lain.util.useless_gaps_resize(-1) end,
+    awful.key({ modkey }, "minus", function () lain.util.useless_gaps_resize(-1) end,
               {description = "decrement useless gaps", group = "tag"}),
 
     -- Dynamic tagging
@@ -369,8 +371,8 @@ globalkeys = my_table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = terminal, group = "super"}),
-    awful.key({ modkey, "Shift"   }, "Return", function () awful.spawn("thunar") end,
-              {description = "Thunar", group = "super"}),
+    awful.key({ modkey, "Shift"   }, "Return", function () awful.spawn(filemanager) end,
+              {description = "PCManFM", group = "super"}),
     awful.key({ modkey, "Shift" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q",  function () awful.spawn.with_shell('killall awesome') end,
@@ -390,12 +392,12 @@ globalkeys = my_table.join(
               {description = "increase the number of columns", group = "layout"}),
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
---    awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
---              {description = "select next", group = "layout"}),
+   awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
+             {description = "select next", group = "layout"}),
     --awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
              -- {description = "select previous", group = "layout"}),
 
-    awful.key({ modkey, "Control" }, "n",
+    awful.key({ modkey }, "s",
               function ()
                   local c = awful.client.restore()
                   -- Focus restored client
@@ -410,19 +412,16 @@ globalkeys = my_table.join(
     --awful.key({ modkey1 }, "Up",
     awful.key({ modkey }, "KP_Add",
         function ()
-            os.execute(string.format("amixer -q set %s 5%%+", beautiful.volume.channel))
-            beautiful.volume.update()
+          os.execute("pactl -- set-sink-volume 0 +5%")
         end),
     awful.key({ modkey, "Shift" }, "KP_Add",
         function ()
-            os.execute(string.format("pactl set-sink-volume 0 +5%%", beautiful.volume.channel))
-            beautiful.volume.update()
+            os.execute("pactl -- set-sink-volume 0 +5%")
         end),
     --awful.key({ modkey1 }, "Down",
     awful.key({ modkey }, "KP_Subtract",
         function ()
-            os.execute(string.format("amixer -q set %s 5%%-", beautiful.volume.channel))
-            beautiful.volume.update()
+          os.execute("pactl -- set-sink-volume 0 -5%")
         end),
     awful.key({ }, "XF86AudioMute",
         function ()
@@ -461,25 +460,23 @@ clientkeys = my_table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey,    }, "q",      function (c) c:kill()                         end,
               {description = "close", group = "hotkeys"}),
-    awful.key({ modkey, }, "space",  
-		 function (c)
-			 c.maximized = false
-			 awful.client.floating.toggle(c)
-		 end,
-              {description = "toggle floating", group = "client"}),
+   --  awful.key({ modkey, }, "space",  
+		 -- function (c)
+			--  c.maximized = false
+			--  awful.client.floating.toggle(c)
+		 -- end,
+              -- {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
 --awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
  --             {description = "toggle keep on top", group = "client"}),
---    awful.key({ modkey,           }, "n",
---        function (c)
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
---            c.minimized = true
---        end ,
---        {description = "minimize", group = "client"}),
+   awful.key({ modkey,           }, "y",
+       function (c)
+           c.minimized = true
+       end ,
+       {description = "minimize", group = "client"}),
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized = not c.maximized
@@ -553,6 +550,10 @@ clientbuttons = gears.table.join(
     awful.button({ modkey }, 1, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
         awful.mouse.client.move(c)
+    end),
+    awful.button({ modkey, "Shift" }, 1, function (c)
+        c:emit_signal("request::activate", "mouse_click", {raise = true})
+		  awful.client.floating.toggle(c)
     end),
     awful.button({ modkey }, 3, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
@@ -692,17 +693,7 @@ client.connect_signal("manage", function (c)
     end
 end)
 
-client.connect_signal("property::floating", function(c)
-    if c.floating then
-        awful.titlebar.show(c)
-		  c.border_color = beautiful.border_color_floating
-		  c.border_width = 1
-    else
-        awful.titlebar.hide(c)
-		  c.border_color = beautiful.border_focus
-		  c.border_width = beautiful.border_width
-    end
-end)
+
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
@@ -725,7 +716,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, {size = 19}) : setup {
+    awful.titlebar(c, {size = 21}) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
             buttons = buttons,
@@ -735,7 +726,7 @@ client.connect_signal("request::titlebars", function(c)
             { -- Title
                 align  = "center",
                 widget = awful.titlebar.widget.titlewidget(c),
-					 font = "JetBrains Mono Bold 10"
+					 font = "JetBrains Mono ExtraBold 10"
             },
             buttons = buttons,
             layout  = wibox.layout.flex.horizontal
@@ -756,12 +747,27 @@ end)
 --    c:emit_signal("request::activate", "mouse_enter", {raise = true})
 --end)
 
+client.connect_signal("property::floating", function(c)
+    if c.floating then
+        awful.titlebar.show(c)
+		  c.border_color = beautiful.border_color_floating
+		  c.border_width = 1
+    else
+        awful.titlebar.hide(c)
+		  -- c.border_color = beautiful.border_focus
+		  c.border_width = beautiful.border_width
+    end
+end)
+
+
 -- No border for maximized clients
 function border_adjust(c)
-    if c.maximized then -- no borders if only 1 client visible
+-- local current_layout = awful.tag.getproperty(t, "layout")
+local current_layout = awful.layout.get(mouse.screen)
+    if c.maximized or current_layout == awful.layout.suit.max and not c.floating then -- no borders if only 1 client visible
 		  awful.titlebar.hide(c)
         c.border_width = 0
-		  --c.border_color = beautiful.border_focus
+		  c.border_color = beautiful.border_focus
     elseif #awful.screen.focused().clients > 0 then
         c.border_width = beautiful.border_width
         c.border_color = beautiful.border_focus
@@ -774,10 +780,37 @@ function border_adjust(c)
 end
 
 client.connect_signal("focus", border_adjust)
+-- client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("property::maximized", border_adjust)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+tag.connect_signal("property::layout", function(t)
+  local clients = awful.client.visible(s)
+  local l = awful.layout.get(mouse.screen)
+   for _, c in pairs(clients) do
+     if l == awful.layout.suit.max and not c.floating then
+       t.gap = 0
+       c.border_width = 0
+    elseif c.floating then
+      c.border_width = 1
+     else
+       t.gap = beautiful.useless_gap
+       c.border_width = beautiful.border_width
+     end
+   end
+end)
 
+for s = 1, screen.count() do screen[s]:connect_signal("arrange", function ()
+  local clients = awful.client.visible(s)
+  local layout = awful.layout.getname(awful.layout.get(s))
 
+  for _, c in pairs(clients) do
+    -- No borders with only one humanly visible client
+    if layout == "max" and not c.floating then
+      c.border_width = 0
+    end
+  end
+end)
+end
 -- Titlebars on Floating Windows
 
 
@@ -787,20 +820,38 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 --
 --
 gears.timer {
-        timeout   = 598,
+        timeout   = 560,
         call_now  = true,
         autostart = true,
         callback  = function()
---		  naughty.notify({title = "Retrieving Updates", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
+		  -- naughty.notify({title = "Retrieving Updates", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
 		  awful.spawn.easy_async_with_shell("checkupdates > $HOME/.config/awesome/scripts/checktemp", function(stdout) end)
 end
 }
 
-gears.timer.start_new(700, function()
-    collectgarbage("step", 20000)
-    return true
-end)
+-- gears.timer.start_new(700, function()
+--     collectgarbage("step", 20000)
+--     return true
+-- end)
+
+
+-- gears.timer.start_new(60, function()
+--   -- just let it do a full collection
+-- collectgarbage("incremental", 150, 600, 0)
+--   -- collectgarbage()
+--   -- or else set a step size
+--   -- collectgarbage("step", 30000)
+--   return true
+-- end)
+
+gears.timer {
+       timeout = 700,
+       autostart = true,
+       callback = function() collectgarbage("incremental", 150, 600, 0)
+		  -- naughty.notify({title = "Retrieving Updates", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
+      end
+}
 
 
 -- Autostart applications
-awful.spawn.with_shell("~/.config/awesome/autostart.sh")
+awful.spawn.easy_async_with_shell("~/.config/awesome/autostart.sh")
