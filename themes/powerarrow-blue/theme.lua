@@ -18,8 +18,9 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 -- theme.wallpaper                                 = os.getenv("HOME") .. "/Downloads/walls/r5952ibaxbd91.png"
-theme.font                                      = "JetBrains Mono ExtraBold 10"
-theme.taglist_font                              = "JetBrains Mono ExtraBold 12"
+theme.font                                      = "JetBrains Mono ExtraBold 9"
+theme.taglist_font                              = "BlexMono Nerd Font Bold 11"
+-- theme.taglist_font                              = "JetBrains Mono ExtraBold 12"
 theme.tasklist_font										= "JetBrains Mono ExtraBold 10"
 theme.fg_normal                                 = "#24283b"
 theme.fg_focus                                  = "#24283b"
@@ -38,6 +39,8 @@ theme.tasklist_bg_focus                         = "#c387ea"
 theme.tasklist_fg_focus                         = "#24283b"
 theme.tasklist_bg_minimize								= "#24283b"
 theme.tasklist_fg_minimize								= "#5e6382"
+theme.tasklist_font_minimized                   = "JetBrains Mono ExtraBold Italic 10"
+-- theme.tasklist_font_minimized                   = "CaskaydiaCove Nerd Font Bold Italic 10"
 theme.tasklist_fg_normal								= "#a8b4ff"
 theme.tasklist_bg_normal								= "#24283b"
 theme.titlebar_fg_normal								= "#a8b4ff"
@@ -49,14 +52,14 @@ theme.border_normal                             = "#404661"
 theme.border_focus                              = "#82dbff"
 theme.border_marked                             = "#CC9393"
 theme.border_color_floating							= "#82dbff"
-theme.menu_height                               = 27
-theme.menu_border_color									= "#000000"
-theme.menu_border_width									= 1
-theme.menu_width                                = 230
-theme.menu_font                                 = "Ubuntu SemiBold 12"
-theme.menu_fg_focus										= "#24283b"
-theme.menu_fg_normal										= "#a8b4ff"
-theme.menu_bg_focus										= "#548bff"
+-- theme.menu_height                               = 27
+-- theme.menu_border_color									= "#000000"
+-- theme.menu_border_width									= 1
+-- theme.menu_width                                = 230
+-- theme.menu_font                                 = "Ubuntu SemiBold 12"
+-- theme.menu_fg_focus										= "#24283b"
+-- theme.menu_fg_normal										= "#a8b4ff"
+-- theme.menu_bg_focus										= "#548bff"
 theme.notification_font									= "JetBrains Mono Bold 10"
 theme.notification_fg									= "#a8b4ff"
 theme.notification_bg									= "#24283b"
@@ -137,6 +140,7 @@ local markup = lain.util.markup
 local separators = lain.util.separators
 
 local tooltip_preset = {
+  font = "JetBrains Mono ExtraBold 10",
   fg   = "#a8b4ff",
   bg   = "#24283b",
   border_width = 1,
@@ -420,7 +424,7 @@ function theme.at_screen_connect(s)
             -- arrow("#b7e07c", "#f07178"),
             wibox.layout.margin(wibox.container.background(wibox.container.margin(clock, 3, 9), "#82dbff"), 1, 1, 0, 0, "#000000"),
             -- arrow("#f07178", "#24283b"),
-            wibox.layout.margin(wibox.container.background(wibox.layout.margin(wibox.widget.systray(), 2, 1, 2, 2), "#24283b"), 0, 0, 0, 0, "#1b1e2b"),
+            wibox.container.background(wibox.layout.margin(wibox.widget.systray(), 2, 1, 2, 2), "#24283b"),
             wibox.container.margin(s.mylayoutbox, 2, 4, 2, 2),
         },
 
