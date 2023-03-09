@@ -35,7 +35,7 @@ local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 awesome.set_preferred_icon_size(16)
 
-
+local volume_widget = require('awesome-wm-widgets.pactl-widget.volume')
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -122,12 +122,12 @@ awful.layout.layouts = {
   -- awful.layout.suit.floating,
   -- awful.layout.suit.tile.left,
   awful.layout.suit.tile.bottom,
+  awful.layout.suit.max,
   -- awful.layout.suit.tile.top,
   -- awful.layout.suit.fair,
   -- awful.layout.suit.fair.horizontal,
   -- awful.layout.suit.spiral,
   -- awful.layout.suit.spiral.dwindle,
-  awful.layout.suit.max,
   -- awful.layout.suit.max.fullscreen,
   -- awful.layout.suit.magnifier,
   -- awful.layout.suit.corner.nw,
@@ -167,18 +167,8 @@ awful.util.tasklist_buttons = my_table.join(
            c:emit_signal("request::activate", "tasklist", {raise = true})
         end
     end),
-    awful.button({ }, 3, function ()
-        local instance = nil
 
-        return function ()
-            if instance and instance.wibox.visible then
-               instance:hide()
-                instance = nil
-            else
-                instance = awful.menu.clients({theme = {width = 250}})
-            end
-        end
-   end),
+    awful.button({ }, 3, function () awful.spawn("jgmenu_run", false) end),
     awful.button({ }, 4, function () awful.client.focus.byidx(1) end),
     awful.button({ }, 5, function () awful.client.focus.byidx(-1) end),
     awful.button({ }, 2, function (c) c:kill() end)
@@ -237,8 +227,26 @@ root.buttons(
     -- awful.button({ modkey }, 5, awful.tag.viewprev)
 )
 -- }}}
+-- local function checkWibarForTag(t)
+--     t.screen.mywibox.visible = t.barvisible
+-- end
+--
+-- local function toggleWibarForTag()
+--     local t = awful.screen.focused().selected_tag
+--     t.barvisible = not t.barvisible
+--     checkWibarForTag(t)
+-- end
 
+function checkWibarForTag(t)
+    if not t.screen or not t.screen.mywibox then return end
+    t.screen.mywibox.visible = t.statusbarvisible
+end
 
+function toggleWibarForTag()
+    local t = awful.screen.focused().selected_tag
+    t.statusbarvisible = not t.statusbarvisible
+    checkWibarForTag(t)
+end
 
 -- {{{ Key bindings
 globalkeys = my_table.join(
@@ -297,13 +305,20 @@ globalkeys = my_table.join(
     -- Non-empty tag browsing
     awful.key({ modkey }, "Tab", function () lain.util.tag_view_nonempty(1) end,
               {description = "view  next nonempty", group = "tag"}),
-    awful.key({ modkey }, "Right", function () lain.util.tag_view_nonempty(1) end,
+    awful.key({ modkey, "Shift" }, "Tab", function () lain.util.tag_view_nonempty(-1) end,
               {description = "view  previous nonempty", group = "tag"}),
 
     -- Default client focus
     awful.key({ modkey,           }, "j",
         function ()
-            awful.client.focus.byidx( 1)
+          awful.client.focus.byidx( 1)
+          -- for _, c in ipairs(mouse.screen.selected_tag:clients()) do
+          --   if not c.maximized then
+          --     c:raise()
+          --   elseif client.focus and c.maximized then
+          --     client.focus:raise()
+          --   end
+          -- end
         end,
         {description = "focus next by index", group = "client"}
     ),
@@ -330,25 +345,34 @@ globalkeys = my_table.join(
               {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
-    awful.key({ modkey1,           }, "Tab",
-        function ()
-            awful.client.focus.history.previous()
-            if client.focus then
-                client.focus:raise()
-            end
-        end,
-        {description = "go back", group = "client"}),
+    -- awful.key({ modkey1,           }, "Tab",
+    --     function ()
+    --         awful.client.focus.history.previous()
+    --         if client.focus then
+    --             client.focus:raise()
+    --         end
+    --     end,
+    --     {description = "go back", group = "client"}),
 
     -- Show/Hide Wibox
     awful.key({ modkey }, "b", function ()
-            for s in screen do
-                s.mywibox.visible = not s.mywibox.visible
-                if s.mybottomwibox then
-                    s.mybottomwibox.visible = not s.mybottomwibox.visible
-                end
+      toggleWibarForTag()
+    end,
+        {description = "toggle wibox per tag", group = "awesome"}),
+    awful.key({ modkey, "Shift" }, "b", function ()
+            -- for s in screen do
+            --     s.mywibox.visible = not s.mywibox.visible
+            --     if s.mybottomwibox then
+            --         s.mybottomwibox.visible = not s.mybottomwibox.visible
+            --     end
+            -- end
+            local s = awful.screen.focused()
+            s.mywibox.visible = not s.mywibox.visible
+            for _, t in pairs(s.tags) do
+                t.statusbarvisible = s.mywibox.visible
             end
         end,
-        {description = "toggle wibox", group = "awesome"}),
+        {description = "toggle wibox per screen", group = "awesome"}),
 
     -- On the fly useless gaps change
     awful.key({ modkey }, "equal", function () lain.util.useless_gaps_resize(1) end,
@@ -356,17 +380,27 @@ globalkeys = my_table.join(
     awful.key({ modkey }, "minus", function () lain.util.useless_gaps_resize(-1) end,
               {description = "decrement useless gaps", group = "tag"}),
 
+
+    -- awful.key({ modkey }, "Page_Up", 
+    --     function ()
+    --       for _, c in ipairs(mouse.screen.selected_tag:clients()) do
+    --         if c then
+		  --       c.border_width = c.border_width + 1
+    --         end
+    --       end
+    --     end,
+    --           {description = "increment borders", group = "tag"}),
     -- Dynamic tagging
     --awful.key({ modkey, "Shift" }, "n", function () lain.util.add_tag() end,
      --         {description = "add new tag", group = "tag"}),
-    awful.key({ modkey, "Control" }, "r", function () lain.util.rename_tag() end,
-              {description = "rename tag", group = "tag"}),
-    awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(-1) end,
-              {description = "move tag to the left", group = "tag"}),
-    awful.key({ modkey, "Shift" }, "Right", function () lain.util.move_tag(1) end,
-              {description = "move tag to the right", group = "tag"}),
-    awful.key({ modkey, "Shift" }, "d", function () lain.util.delete_tag() end,
-              {description = "delete tag", group = "tag"}),
+    -- awful.key({ modkey, "Control" }, "r", function () lain.util.rename_tag() end,
+    --           {description = "rename tag", group = "tag"}),
+    -- awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(-1) end,
+    --           {description = "move tag to the left", group = "tag"}),
+    -- awful.key({ modkey, "Shift" }, "Right", function () lain.util.move_tag(1) end,
+    --           {description = "move tag to the right", group = "tag"}),
+    -- awful.key({ modkey, "Shift" }, "d", function () lain.util.delete_tag() end,
+    --           {description = "delete tag", group = "tag"}),
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
@@ -375,7 +409,7 @@ globalkeys = my_table.join(
               {description = "PCManFM", group = "super"}),
     awful.key({ modkey, "Shift" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Shift"   }, "q",  function () awful.spawn.with_shell('killall awesome') end,
+    awful.key({ modkey, "Shift"   }, "q",  function () awesome.quit() end,
               {description = "quit awesome", group = "awesome"}),
 
 
@@ -413,16 +447,18 @@ globalkeys = my_table.join(
     --awful.key({ modkey1 }, "Up",
     awful.key({ modkey }, "KP_Add",
         function ()
-          os.execute("pactl -- set-sink-volume 0 +5%")
+          -- os.execute("pactl -- set-sink-volume 0 +5%")
+          volume_widget:inc(5)
         end),
-    awful.key({ modkey, "Shift" }, "KP_Add",
-        function ()
-            os.execute("pactl -- set-sink-volume 0 +5%")
-        end),
+    -- awful.key({ modkey, "Shift" }, "KP_Add",
+    --     function ()
+    --         os.execute("pactl -- set-sink-volume 0 +5%")
+    --     end),
     --awful.key({ modkey1 }, "Down",
     awful.key({ modkey }, "KP_Subtract",
         function ()
-          os.execute("pactl -- set-sink-volume 0 -5%")
+          -- os.execute("pactl -- set-sink-volume 0 -5%")
+          volume_widget:dec(5)
         end),
     awful.key({ }, "XF86AudioMute",
         function ()
@@ -490,8 +526,8 @@ clientkeys = my_table.join(
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
---awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
- --             {description = "toggle keep on top", group = "client"}),
+awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
+             {description = "toggle keep on top", group = "client"}),
    awful.key({ modkey,           }, "y",
        function (c)
            c.minimized = true
@@ -574,6 +610,9 @@ clientbuttons = gears.table.join(
     awful.button({ modkey, "Shift" }, 1, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
 		  awful.client.floating.toggle(c)
+        if c.floating then
+          lain.util.mc(c, width_f, height_f)
+        end
     end),
     awful.button({ modkey }, 3, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
@@ -775,7 +814,7 @@ client.connect_signal("property::floating", function(c)
 		  c.border_width = 1
     else
         awful.titlebar.hide(c)
-		  -- c.border_color = beautiful.border_focus
+		  c.border_color = beautiful.border_focus
 		  c.border_width = beautiful.border_width
     end
 end)
@@ -926,6 +965,12 @@ client.connect_signal("manage", function(c)
     end)
 end)
 
+
+
+
+
+
+tag.connect_signal("property::selected",checkWibarForTag)
 
 -- }}}
 --
