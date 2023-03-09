@@ -270,8 +270,8 @@ globalkeys = my_table.join(
 
     -- Hotkeys Awesome
 
-    -- awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
-    --     {description = "show help", group="awesome"}),
+    awful.key({ modkey,           }, "F5",      hotkeys_popup.show_help,
+        {description = "show help", group="awesome"}),
 
     -- Tag browsing with modkey
     --awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -402,6 +402,7 @@ globalkeys = my_table.join(
                   local c = awful.client.restore()
                   -- Focus restored client
                   if c then
+                      c.minimized = false
                       client.focus = c
                       c:raise()
                   end
@@ -438,7 +439,26 @@ globalkeys = my_table.join(
             os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
             beautiful.volume.update()
         end),
-
+        awful.key({modkey, "Shift"}, 'm',
+        function ()
+          for _, c in ipairs(mouse.screen.selected_tag:clients()) do
+            if c then
+              c.minimized = false
+            end
+          end
+        end,
+        {description = "min/max all windows", group = "client"}
+        ),
+        awful.key({modkey, "Shift"}, 'n',
+        function ()
+          for _, c in ipairs(mouse.screen.selected_tag:clients()) do
+            if c then
+              c.minimized = true
+            end
+          end
+        end,
+        {description = "min/max all windows", group = "client"}
+        ),
     -- Copy primary to clipboard (terminals to gtk)
     awful.key({ modkey }, "c", function () awful.spawn.with_shell("xsel | xsel -i -b") end,
               {description = "copy terminal to gtk", group = "hotkeys"}),
@@ -580,7 +600,7 @@ awful.rules.rules = {
                      buttons = clientbuttons,
                      screen = awful.screen.preferred,
                      placement = awful.placement.centered+awful.placement.no_overlap+awful.placement.no_offscreen,
-                     size_hints_honor = false
+                     size_hints_honor = true
      }
     },
 
@@ -791,8 +811,10 @@ tag.connect_signal("property::layout", function(t)
      if l == awful.layout.suit.max and not c.floating then
        t.gap = 0
        c.border_width = 0
-    elseif c.floating then
+    elseif c.floating and not c.maximized then
       c.border_width = 1
+    elseif c.maximized then
+      c.border_width = 0
      else
        t.gap = beautiful.useless_gap
        c.border_width = beautiful.border_width
@@ -841,6 +863,9 @@ function copy_size(c, parent_client)
     if (not c.valid or not parent_client.valid) then
         return
     end
+    if (c.maximized) then
+      return
+    end
     c.x=parent_client.x;
     c.y=parent_client.y;
     c.width=parent_client.width;
@@ -886,6 +911,12 @@ client.connect_signal("manage", function(c)
             grand_parent_pid = gppid
             if parent_client and (parent_pid:find('^' .. parent_client.pid) or grand_parent_pid:find('^' .. parent_client.pid)) and is_to_be_swallowed(parent_client) and can_swallow(c.class) then
                 -- c.floating=true
+                -- for _, cl in ipairs(mouse.screen.selected_tag:clients()) do
+                --   local c = cl
+                --   if c then
+                --     c.minimized = true
+                --   end
+                -- end
                 parent_client.child_resize=c
                 parent_client.minimized = true
                 c:connect_signal("unmanage", function() parent_client.minimized = false end)
