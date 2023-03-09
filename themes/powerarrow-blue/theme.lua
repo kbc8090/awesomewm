@@ -9,7 +9,12 @@ local gears = require("gears")
 shape = require("gears.shape")
 local lain  = require("lain")
 local awful = require("awful")
+
+-- require("awful.autofocus")
+-- require("awful.hotkeys_popup.keys")
 local wibox = require("wibox")
+local volume_widget = require('awesome-wm-widgets.pactl-widget.volume')
+local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 -- local dpi   = require("beautiful.xresources").apply_dpi
 
 local math, string, os = math, string, os
@@ -45,22 +50,22 @@ theme.tasklist_fg_normal								= "#a8b4ff"
 theme.tasklist_bg_normal								= "#24283b"
 theme.titlebar_fg_normal								= "#a8b4ff"
 theme.titlebar_bg_normal								= "#24283b"
-theme.titlebar_bg_focus									= "#82dbf8"
+theme.titlebar_bg_focus									= "#ffb26b"
 theme.titlebar_fg_focus									= "#24283b"
 theme.border_width                              = 2
 theme.border_normal                             = "#404661"
 theme.border_focus                              = "#82dbff"
 theme.border_marked                             = "#CC9393"
-theme.border_color_floating							= "#82dbff"
--- theme.menu_height                               = 27
--- theme.menu_border_color									= "#000000"
--- theme.menu_border_width									= 1
--- theme.menu_width                                = 230
--- theme.menu_font                                 = "Ubuntu SemiBold 12"
--- theme.menu_fg_focus										= "#24283b"
--- theme.menu_fg_normal										= "#a8b4ff"
--- theme.menu_bg_focus										= "#548bff"
-theme.notification_font									= "JetBrains Mono Bold 10"
+theme.border_color_floating							= "#ffb26b"
+theme.menu_height                               = 22
+theme.menu_border_color									= "#5e6382"
+theme.menu_border_width									= 1
+theme.menu_width                                = 160
+theme.menu_font                                 = "JetBrains Mono ExtraBold 9"
+theme.menu_fg_focus										= "#24283b"
+theme.menu_fg_normal										= "#a8b4ff"
+theme.menu_bg_focus										= "#548bff"
+theme.notification_font									= "JetBrains Mono ExtraBold 10"
 theme.notification_fg									= "#a8b4ff"
 theme.notification_bg									= "#24283b"
 theme.notification_border_width                 = 8
@@ -134,7 +139,7 @@ theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = false
 theme.tasklist_icon_size                        = 5
 --theme.titlebar.enable_tooltip							= false
-theme.useless_gap                               = 3
+theme.useless_gap                               = 4
 awesome.set_preferred_icon_size(16)
 local markup = lain.util.markup
 local separators = lain.util.separators
@@ -151,16 +156,18 @@ local tooltip_preset = {
 }
 
 myawesomemenu = {
-   { 'hotkeys', function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-   { 'manual', 'xterm' .. ' -e man awesome' },
+   -- { 'hotkeys', function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+   -- { 'manual', 'xterm' .. ' -e man awesome' },
    { 'restart', awesome.restart },
    { 'quit', function() awesome.quit() end }
 }
 
-mymainmenu = awful.menu({ items = { { 'awesome', myawesomemenu, theme.awesome_icon },
-                                    { 'open terminal', 'xterm'}
+mymainmenu = awful.menu({ items = { { 'alacritty', 'alacritty', },
+{ 'restart', awesome.restart },
+{ 'quit', function() awesome.quit() end },
+{ 'open terminal', 'st'}
                                   }
-                        })
+                                })
 
 mylauncher = awful.widget.launcher({ image = theme.awesome_icon,
                                      menu = mymainmenu })
@@ -257,6 +264,8 @@ local updicon = wibox.widget.textbox("  ")
 local updiconblank = wibox.widget.textbox()
 updiconblank.text = " "
 
+local volumeper = wibox.widget.textbox()
+volumeper.text = "% "
 
 -- local checkupd_t = awful.tooltip { }
 -- checkupd_t:add_to_object(checkupd)
@@ -352,6 +361,13 @@ function theme.at_screen_connect(s)
     -- All tags open with layout 1
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
 
+    -- for i,t in pairs(root.tags()) do
+    --   t.barvisible = true
+    -- end
+    for _,t in pairs(s.tags) do
+        t.statusbarvisible = true
+    end
+
     -- Create a promptbox for each screen
     -- s.mypromptbox = awful.widget.prompt()
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
@@ -385,8 +401,9 @@ function theme.at_screen_connect(s)
         { -- Left widgets
             layout = wibox.layout.align.horizontal,
             --spr,
-				--mylauncher,
             s.mytaglist,
+				-- mylauncher,
+            -- updiconblank,
 				--spr,
         },
         -- s.mytasklist, -- Middle widget
@@ -416,7 +433,7 @@ function theme.at_screen_connect(s)
             -- arrow("#82dbff", "#ffb26b"),
             wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { updicon, checkupd, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#ffb26b"), 1, 0, 0, 0, "#000000"),
             -- arrow("#ffb26b", "#719eff"),
-            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { volicon, newvolume, layout = wibox.layout.align.horizontal }, 3, 3), "#719eff"), 1, 0, 0, 0, "#000000"),
+            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { updiconblank, volume_widget{ widget_type = 'icon_and_text'}, volumeper, layout = wibox.layout.align.horizontal }, 3, 3), "#719eff"), 1, 0, 0, 0, "#000000"),
             -- arrow("#719eff", "#c387ea"),
             wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { memicon, memory, layout = wibox.layout.align.horizontal }, 3, 3), "#c387ea"), 1, 0, 0, 0, "#000000"),
             -- arrow("#c387ea", "#b7e07c"),
@@ -426,6 +443,8 @@ function theme.at_screen_connect(s)
             -- arrow("#f07178", "#24283b"),
             wibox.container.background(wibox.layout.margin(wibox.widget.systray(), 2, 1, 2, 2), "#24283b"),
             wibox.container.margin(s.mylayoutbox, 2, 4, 2, 2),
+            -- mylauncher,
+            -- logout_menu_widget{ font='JetBrains Mono ExtraBold 10' },
         },
 
     },
