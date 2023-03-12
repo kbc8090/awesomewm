@@ -14,7 +14,8 @@ local awful = require("awful")
 -- require("awful.hotkeys_popup.keys")
 local wibox = require("wibox")
 local volume_widget = require('awesome-wm-widgets.pactl-widget.volume')
-local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
+-- local logout_popup = require("awesome-wm-widgets.logout-popup-widget.logout-popup")
+-- local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 -- local dpi   = require("beautiful.xresources").apply_dpi
 
 local math, string, os = math, string, os
@@ -441,8 +442,9 @@ function theme.at_screen_connect(s)
             -- arrow("#b7e07c", "#f07178"),
             wibox.layout.margin(wibox.container.background(wibox.container.margin(clock, 3, 9), "#82dbff"), 1, 1, 0, 0, "#000000"),
             -- arrow("#f07178", "#24283b"),
-            wibox.container.background(wibox.layout.margin(wibox.widget.systray(), 2, 1, 2, 2), "#24283b"),
-            wibox.container.margin(s.mylayoutbox, 2, 4, 2, 2),
+            wibox.container.background(wibox.layout.margin(wibox.widget.systray(), 3, 1, 2, 2), "#24283b"),
+            wibox.container.margin(s.mylayoutbox, 1, 4, 2, 2),
+            -- logout_popup.widget{},
             -- mylauncher,
             -- logout_menu_widget{ font='JetBrains Mono ExtraBold 10' },
         },
