@@ -99,12 +99,12 @@ local modkey1      = "Control"
 local browser           = "chromium"
 local editor            = os.getenv("EDITOR") or "nvim"
 local editorgui         = "geany"
-local filemanager       = "pcmanfm"
+local filemanager       = "thunar"
 local mailclient        = "geary"
 local mediaplayer       = "vlc"
 local scrlocker         = "slimlock"
--- local terminal          = "alacritty"
-local terminal          = "st"
+local terminal          = "alacritty"
+-- local terminal          = "st"
 local virtualmachine    = "virtualbox"
 
 -- awesome variables
@@ -266,6 +266,8 @@ globalkeys = my_table.join(
         {description = "Xfce screenshot", group = "screenshots"}),
     awful.key({ modkey }, "F1", function () awful.util.spawn( "chromium --force-dark-mode" ) end,
         {description = "Chromium", group = "screenshots"}),
+    awful.key({ modkey }, "F9", function () awful.util.spawn( "alacritty" ) end,
+        {description = "Chromium", group = "screenshots"}),
     awful.key({ modkey }, "n", function () awful.util.spawn( "nitrogen" ) end,
         {description = "Nitrogen", group = "screenshots"}),
     awful.key({ modkey }, "F2", function () awful.util.spawn( "firefox" ) end,
@@ -409,7 +411,7 @@ globalkeys = my_table.join(
               {description = "PCManFM", group = "super"}),
     awful.key({ modkey, "Shift" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Shift"   }, "q",  function () awesome.quit() end,
+    awful.key({ modkey, "Shift"   }, "q",  function () awful.spawn.with_shell("~/.config/awesome/scripts/ascript.sh") end,
               {description = "quit awesome", group = "awesome"}),
 
 
@@ -488,7 +490,7 @@ globalkeys = my_table.join(
         awful.key({modkey, "Shift"}, 'n',
         function ()
           for _, c in ipairs(mouse.screen.selected_tag:clients()) do
-            if c then
+            if not c.minimized then
               c.minimized = true
             end
           end
@@ -609,7 +611,7 @@ clientbuttons = gears.table.join(
     end),
     awful.button({ modkey, "Shift" }, 1, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
-		  awful.client.floating.toggle(c)
+        c.floating = not c.floating
         if c.floating then
           lain.util.mc(c, width_f, height_f)
         end
@@ -812,6 +814,11 @@ client.connect_signal("property::floating", function(c)
         awful.titlebar.show(c)
 		  c.border_color = beautiful.border_color_floating
 		  c.border_width = 1
+    elseif c.maximized and not c.floating then
+        awful.titlebar.hide(c)
+		  c.border_color = beautiful.border_focus
+		  c.border_width = 8
+        -- awful.client.floating.toggle(c)
     else
         awful.titlebar.hide(c)
 		  c.border_color = beautiful.border_focus
@@ -844,6 +851,7 @@ client.connect_signal("focus", border_adjust)
 client.connect_signal("property::maximized", border_adjust)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 tag.connect_signal("property::layout", function(t)
+  t.gap = beautiful.useless_gap
   local clients = awful.client.visible(s)
   local l = awful.layout.get(mouse.screen)
    for _, c in pairs(clients) do
@@ -1004,10 +1012,10 @@ gears.timer {
        timeout = 700,
        autostart = true,
        callback = function() collectgarbage("incremental", 150, 600, 0)
-		  -- naughty.notify({title = "Retrieving Updates", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
+		  naughty.notify({title = "Collecting Garbage", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
       end
 }
 
 
 -- Autostart applications
-awful.spawn.easy_async_with_shell("~/.config/awesome/autostart.sh")
+awful.spawn.easy_async_with_shell("~/.config/awesome/scripts/autostart.sh")
