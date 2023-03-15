@@ -53,7 +53,7 @@ theme.titlebar_fg_normal								= "#a8b4ff"
 theme.titlebar_bg_normal								= "#24283b"
 theme.titlebar_bg_focus									= "#ffb26b"
 theme.titlebar_fg_focus									= "#24283b"
-theme.border_width                              = 2
+theme.border_width                              = 3
 theme.border_normal                             = "#404661"
 theme.border_focus                              = "#82dbff"
 theme.border_marked                             = "#CC9393"
@@ -138,10 +138,10 @@ theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = false
-theme.tasklist_icon_size                        = 5
+theme.tasklist_icon_size                        = 20
 --theme.titlebar.enable_tooltip							= false
-theme.useless_gap                               = 4
-awesome.set_preferred_icon_size(16)
+theme.useless_gap                               = 3
+awesome.set_preferred_icon_size(128)
 local markup = lain.util.markup
 local separators = lain.util.separators
 
@@ -387,9 +387,61 @@ function theme.at_screen_connect(s)
     }
 
     -- Create a tasklist widget
-    s.mytasklist = wibox.layout.margin(awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons), 1, 0, 0, 0, "#24283b")
+    -- s.mytasklist = wibox.layout.margin(awful.widget.tasklist { 
+    --   screen = s, 
+    --   filter = awful.widget.tasklist.filter.currenttags,
+    --   buttons = awful.util.tasklist_buttons,
+    --   widget_template = theme.tasklist_widget_template
+    --   }, 1, 0, 0, 0, "#24283b")
 
-    
+
+    s.mytasklist = wibox.layout.margin(awful.widget.tasklist {
+      screen = s,
+      filter = awful.widget.tasklist.filter.currenttags,
+      buttons = awful.util.tasklist_buttons,
+      layout   = {
+        spacing_widget = {
+          {
+            thickness     = 1,
+            color         = '#000000',
+            widget        = wibox.widget.separator
+          },
+          valign = 'center',
+          halign = 'center',
+          widget = wibox.container.place,
+        },
+        spacing = 1,
+        layout  = wibox.layout.flex.horizontal
+      },
+      widget_template = {
+        {
+          {
+            {
+              {
+                id     = 'icon_role',
+                widget = wibox.widget.imagebox,
+              },
+              left = 2,
+              right = 3,
+              top = 2,
+              bottom = 2,
+              widget  = wibox.container.margin,
+            },
+            {
+              id     = 'text_role',
+              widget = wibox.widget.textbox,
+            },
+            layout = wibox.layout.fixed.horizontal,
+          },
+          left  = 2,
+          right = 2,
+          widget = wibox.container.margin
+        },
+        id     = 'background_role',
+        widget = wibox.container.background,
+      },
+    }, 1, 0, 0, 0, "#24283b")
+
 
 
     -- Create the wibox
