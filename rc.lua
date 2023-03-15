@@ -33,8 +33,6 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 -- }}}
 
-awesome.set_preferred_icon_size(16)
-
 local volume_widget = require('awesome-wm-widgets.pactl-widget.volume')
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -1012,7 +1010,7 @@ gears.timer {
        timeout = 700,
        autostart = true,
        callback = function() collectgarbage("incremental", 150, 600, 0)
-		  naughty.notify({title = "Collecting Garbage", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
+		  -- naughty.notify({title = "Collecting Garbage", text = "\n Please Wait...", icon = "/home/kbc/.config/awesome/pacman.png"})
       end
 }
 
