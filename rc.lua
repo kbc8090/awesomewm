@@ -15,7 +15,7 @@ local beautiful     = require("beautiful")
 
 -- Notification library
 local naughty       = require("naughty")
-naughty.config.defaults['icon_size'] = 80
+naughty.config.defaults['icon_size'] = 30
 --naughty.config.timeout = 15
 --naughty.config.default.font = "JetBrainsMono Nerd Font 11"
 naughty.config.font = "Ubuntu Mono Bold 12"
@@ -101,7 +101,7 @@ local filemanager       = "thunar"
 local mailclient        = "geary"
 local mediaplayer       = "vlc"
 local scrlocker         = "slimlock"
-local terminal          = "alacritty"
+local terminal          = "st"
 -- local terminal          = "st"
 local virtualmachine    = "virtualbox"
 
@@ -614,8 +614,16 @@ clientbuttons = gears.table.join(
           lain.util.mc(c, width_f, height_f)
         end
     end),
+    awful.button({ modkey, "Shift"  }, 2, function (c)
+        c:emit_signal("request::activate", "mouse_click", {raise = true})
+            c.maximized = not c.maximized
+            c:raise()
+    end),
     awful.button({ modkey }, 3, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
+        if not c.floating then
+          c.floating = not c.floating
+        end
         awful.mouse.client.resize(c)
     end)
 )
