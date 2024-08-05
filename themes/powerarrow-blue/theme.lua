@@ -25,7 +25,7 @@ local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 -- theme.wallpaper                                 = os.getenv("HOME") .. "/Downloads/walls/r5952ibaxbd91.png"
 theme.font                                      = "JetBrains Mono ExtraBold 9"
-theme.taglist_font                              = "JetBrains Mono ExtraBold 11"
+theme.taglist_font                              = "JetBrains Mono ExtraBold 10"
 -- theme.taglist_font                              = "JetBrains Mono ExtraBold 12"
 theme.tasklist_font										= "JetBrains Mono ExtraBold 10"
 theme.fg_normal                                 = "#24283b"
@@ -446,7 +446,7 @@ function theme.at_screen_connect(s)
 
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 22, align = center_vertical  })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = 20, align = center_vertical  })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -456,10 +456,12 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.align.horizontal,
             --spr,
             s.mytaglist,
+            --wibox.container.margin(s.mylayoutbox, 5, 5, 2, 2),
 				-- mylauncher,
             -- updiconblank,
 				--spr,
         },
+
         -- s.mytasklist, -- Middle widget
         s.mytasklist,
         { -- Right widgets
@@ -483,17 +485,17 @@ function theme.at_screen_connect(s)
             -- wibox.container.background(wibox.container.margin(wibox.widget { updicon, checkupd, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#ffb26b"),
 
             -- wibox.container.background(wibox.container.margin(wibox.widget { widgetspace, layout = wibox.layout.align.horizontal }, 1, 1), "#24283b"),
-            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { kernelicon, kernel, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#f07178"), 1, 0, 0, 0, "#000000"),
+            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { kernelicon, kernel, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#f07178"), 1, 0, 0, 0, "#24283b"),
             -- arrow("#82dbff", "#ffb26b"),
-            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { updicon, checkupd, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#ffb26b"), 1, 0, 0, 0, "#000000"),
+            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { updicon, checkupd, updiconblank, layout = wibox.layout.align.horizontal }, 3, 3), "#ffb26b"), 1, 0, 0, 0, "#24283b"),
             -- arrow("#ffb26b", "#719eff"),
-            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { updiconblank, volume_widget{ widget_type = 'icon_and_text'}, volumeper, layout = wibox.layout.align.horizontal }, 3, 3), "#719eff"), 1, 0, 0, 0, "#000000"),
+            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { updiconblank, volume_widget{ widget_type = 'icon_and_text'}, volumeper, layout = wibox.layout.align.horizontal }, 3, 3), "#719eff"), 1, 0, 0, 0, "#24283b"),
             -- arrow("#719eff", "#c387ea"),
-            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { memicon, memory, layout = wibox.layout.align.horizontal }, 3, 3), "#c387ea"), 1, 0, 0, 0, "#000000"),
+            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { memicon, memory, layout = wibox.layout.align.horizontal }, 3, 3), "#c387ea"), 1, 0, 0, 0, "#24283b"),
             -- arrow("#c387ea", "#b7e07c"),
-            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 0), "#b7e07c"), 1, 0, 0, 0, "#000000"),
+            wibox.layout.margin(wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 0), "#b7e07c"), 1, 0, 0, 0, "#24283b"),
             -- arrow("#b7e07c", "#f07178"),
-            wibox.layout.margin(wibox.container.background(wibox.container.margin(clock, 3, 9), "#82dbff"), 1, 1, 0, 0, "#000000"),
+            wibox.layout.margin(wibox.container.background(wibox.container.margin(clock, 3, 9), "#82dbff"), 1, 1, 0, 0, "#24283b"),
             -- arrow("#f07178", "#24283b"),
             wibox.container.background(wibox.layout.margin(wibox.widget.systray(), 3, 1, 2, 2), "#24283b"),
             wibox.container.margin(s.mylayoutbox, 1, 4, 2, 2),
